@@ -1,9 +1,10 @@
 import { createClient } from "@/lib/supabase/server";
 import { __get_profile, _db_view_data, _get_user_login } from "@/utils/api/method";
+import { FormatJSON } from "@/utils/commons/FormatJSON";
 
 export default async function HomePage() {
   const supabase = await createClient()
   const profile = await __get_profile(supabase);
 
-  return <pre>{JSON.stringify(profile?.data, null, 2)}</pre>
+  return <FormatJSON data={profile?.data}/>
 }
