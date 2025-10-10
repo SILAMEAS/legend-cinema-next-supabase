@@ -15,6 +15,10 @@ import { Label } from "@/components/ui/label";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { _db_insert_data } from "@/utils/api/method";
+import { TypeCreateUser } from "@/utils/api/type";
+import { EnumTableName } from "@/utils/enum/EnumTable";
+import { EnumPage } from "@/utils/enum/EnumPage";
 
 export function SignUpForm({
   className,
@@ -40,7 +44,7 @@ export function SignUpForm({
     }
 
     try {
-      const { error } = await supabase.auth.signUp({
+      const {data, error } = await supabase.auth.signUp({
         email,
         password,
         options: {
@@ -48,7 +52,19 @@ export function SignUpForm({
         },
       });
       if (error) throw error;
-      router.push("/auth/sign-up-success");
+      /** _db_insert_data :  calling add new user to db */ 
+      const _email = data.user?.email;
+
+      await _db_insert_data<TypeCreateUser>({
+        supabase,
+        tableName:EnumTableName.Profile,
+        data:{
+          email:`${_email}`,
+          name:`${_email?.slice(0,5)}`,
+          user_id:`${data.user?.id}`
+        }
+      });
+      router.push(EnumPage.AUTH_SUCCESS);
     } catch (error: unknown) {
       setError(error instanceof Error ? error.message : "An error occurred");
     } finally {
@@ -108,7 +124,7 @@ export function SignUpForm({
             </div>
             <div className="mt-4 text-center text-sm">
               Already have an account?{" "}
-              <Link href="/auth/login" className="underline underline-offset-4">
+              <Link href={EnumPage.AUTH_LOGIN} className="underline underline-offset-4">
                 Login
               </Link>
             </div>
