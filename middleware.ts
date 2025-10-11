@@ -1,21 +1,8 @@
 import { updateSession } from "@/lib/supabase/middleware";
 import { type NextRequest } from "next/server";
-import { NextResponse } from "next/server";
+
 export async function middleware(request: NextRequest) {
- // Run your existing Supabase session handler
-  const response = await updateSession(request);
-   // 🧠 Check if user is not logged in and trying to access "/"
-  const isRootPath = request.nextUrl.pathname === "/";
-
-  // You can get the session from the request cookies (Supabase stores it as sb-access-token or similar)
-  const accessToken = request.cookies.get("sb-access-token")?.value;
-
-  if (isRootPath && !accessToken) {
-    const loginUrl = new URL("/auth/login", request.url);
-    return NextResponse.redirect(loginUrl);
-  }
-
-  return response;
+  return await updateSession(request);
 }
 
 export const config = {

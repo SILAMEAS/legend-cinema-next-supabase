@@ -5,5 +5,7 @@ export enum EnumPage{
     AUTH_SUCCESS = "/auth/sign-up-success",
     AUTH_LOGIN = "/auth/login",
     AUTH_FORGOT_PASSWORD="/auth/forgot-password",
-    AUTH_SIGN_UP="/auth/sign-up"
+    AUTH_SIGN_UP="/auth/sign-up",
+    AUTH_ERROR="/auth/error",
+    AUTH_UPDATE_PASSWORD="/auth/update-password"
 }

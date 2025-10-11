@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { TutorialStep } from "./tutorial-step";
 import { ArrowUpRight } from "lucide-react";
+import {EnumPage} from "@/utils/enum/EnumPage";
 
 export function SignUpUserSteps() {
   return (
@@ -77,7 +78,7 @@ export function SignUpUserSteps() {
         <p>
           Head over to the{" "}
           <Link
-            href="auth/sign-up"
+            href={EnumPage.AUTH_SIGN_UP}
             className="font-bold hover:underline text-foreground/80"
           >
             Sign up
