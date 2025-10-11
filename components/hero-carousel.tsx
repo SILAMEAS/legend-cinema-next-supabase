@@ -47,7 +47,7 @@ export function HeroCarousel() {
     }
 
     return (
-        <section className="relative w-full h-[500px] overflow-hidden bg-black">
+        <section className="relative w-full h-[250px] sm:h-[350px] md:h-[450px] lg:h-[500px] overflow-hidden bg-black">
             {/* Slides */}
             <div className="relative w-full h-full">
                 {slides.map((slide, index) => (
@@ -71,28 +71,28 @@ export function HeroCarousel() {
             {/* Navigation Arrows */}
             <button
                 onClick={prevSlide}
-                className="absolute left-4 top-1/2 -translate-y-1/2 z-20 p-3 rounded-full bg-black/50 hover:bg-black/70 transition-colors"
+                className="absolute left-2 md:left-4 top-1/2 -translate-y-1/2 z-20 p-2 md:p-3 rounded-full bg-black/50 hover:bg-black/70 transition-colors"
                 aria-label="Previous slide"
             >
-                <ChevronLeft className="w-6 h-6 text-white" />
+                <ChevronLeft className="w-4 h-4 md:w-6 md:h-6 text-white" />
             </button>
 
             <button
                 onClick={nextSlide}
-                className="absolute right-4 top-1/2 -translate-y-1/2 z-20 p-3 rounded-full bg-black/50 hover:bg-black/70 transition-colors"
+                className="absolute right-2 md:right-4 top-1/2 -translate-y-1/2 z-20 p-2 md:p-3 rounded-full bg-black/50 hover:bg-black/70 transition-colors"
                 aria-label="Next slide"
             >
-                <ChevronRight className="w-6 h-6 text-white" />
+                <ChevronRight className="w-4 h-4 md:w-6 md:h-6 text-white" />
             </button>
 
             {/* Slide Indicators */}
-            <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-2 z-20">
+            <div className="absolute bottom-3 md:bottom-6 left-1/2 -translate-x-1/2 flex gap-1.5 md:gap-2 z-20">
                 {slides.map((_, index) => (
                     <button
                         key={index}
                         onClick={() => setCurrentSlide(index)}
-                        className={`h-2 rounded-full transition-all ${
-                            index === currentSlide ? "w-8 bg-red-600" : "w-2 bg-white/50 hover:bg-white/70"
+                        className={`h-1.5 md:h-2 rounded-full transition-all ${
+                            index === currentSlide ? "w-6 md:w-8 bg-red-600" : "w-1.5 md:w-2 bg-white/50 hover:bg-white/70"
                         }`}
                         aria-label={`Go to slide ${index + 1}`}
                     />

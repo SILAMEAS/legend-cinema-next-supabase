@@ -23,26 +23,25 @@ export function MovieCard({ title, image, rating, duration, genre }: MovieCardPr
                 />
                 {/* Overlay on hover */}
                 <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity">
-                    <div className="absolute bottom-0 left-0 right-0 p-4 space-y-3">
+                    <div className="absolute bottom-0 left-0 right-0 p-3 md:p-4 space-y-2 md:space-y-3">
                         {duration && (
-                            <div className="flex items-center gap-2 text-sm text-zinc-300">
-                                <Clock className="w-4 h-4" />
+                            <div className="flex items-center gap-2 text-xs md:text-sm text-zinc-300">
+                                <Clock className="w-3 h-3 md:w-4 md:h-4" />
                                 <span>{duration}</span>
                             </div>
                         )}
-                        {genre && <div className="text-sm text-zinc-400">{genre}</div>}
-                        <Button className="w-full bg-red-600 hover:bg-red-700 text-white">Book Now</Button>
+                        {genre && <div className="text-xs md:text-sm text-zinc-400">{genre}</div>}
+                        <Button className="w-full bg-red-600 hover:bg-red-700 text-white text-xs md:text-sm py-2">Book Now</Button>
                     </div>
                 </div>
             </div>
 
-            {/* Movie Info */}
-            <div className="p-4">
-                <h3 className="font-semibold text-white line-clamp-2 mb-2">{title}</h3>
+            <div className="p-3 md:p-4">
+                <h3 className="font-semibold text-white line-clamp-2 mb-2 text-sm md:text-base">{title}</h3>
                 {rating && (
                     <div className="flex items-center gap-1 text-amber-400">
-                        <Star className="w-4 h-4 fill-current" />
-                        <span className="text-sm font-medium">{rating}</span>
+                        <Star className="w-3 h-3 md:w-4 md:h-4 fill-current" />
+                        <span className="text-xs md:text-sm font-medium">{rating}</span>
                     </div>
                 )}
             </div>

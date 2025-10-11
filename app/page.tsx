@@ -123,31 +123,30 @@ export default function Home() {
         <HeroCarousel />
 
         {/* Now Showing Section */}
-        <section className="py-12">
-          <div className="container mx-auto px-6">
-            <div className="flex items-center gap-4 mb-8">
-              <h2 className="text-3xl font-bold">Now Showing</h2>
+        <section className="py-8 md:py-12">
+          <div className="container mx-auto px-4 md:px-6">
+            <div className="flex items-center gap-3 md:gap-4 mb-6 md:mb-8">
+              <h2 className="text-2xl md:text-3xl font-bold">Now Showing</h2>
               <span className="text-zinc-600">|</span>
-              <button className="text-zinc-400 hover:text-white text-xl">Coming Soon</button>
+              <button className="text-zinc-400 hover:text-white text-lg md:text-xl">Coming Soon</button>
             </div>
 
-            {/* Date Selector */}
-            <div className="flex gap-4 mb-12">
+            <div className="flex gap-3 md:gap-4 mb-8 md:mb-12 overflow-x-auto pb-2 scrollbar-hide">
               {dates.map((date, index) => (
                   <button
                       key={index}
-                      className={`flex flex-col items-center justify-center px-8 py-4 rounded-lg border-2 transition-colors ${
+                      className={`flex flex-col items-center justify-center px-6 md:px-8 py-3 md:py-4 rounded-lg border-2 transition-colors flex-shrink-0 ${
                           index === 0 ? "border-red-600 bg-red-600/10" : "border-zinc-800 hover:border-zinc-700"
                       }`}
                   >
                     <div className="text-xs text-zinc-400 mb-1">{date.day}</div>
-                    <div className="text-2xl font-bold">{date.date}</div>
+                    <div className="text-xl md:text-2xl font-bold">{date.date}</div>
                     <div className="text-xs text-zinc-400 mt-1">{date.month}</div>
                   </button>
               ))}
             </div>
 
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 md:gap-6">
               {movies.map((movie) => (
                   <MovieCard
                       key={movie.id}
@@ -163,11 +162,11 @@ export default function Home() {
         </section>
 
         {/* What's New Section */}
-        <section className="py-16 bg-zinc-950">
-          <div className="container mx-auto px-6">
-            <h2 className="text-3xl font-bold mb-8">What's new?</h2>
+        <section className="py-12 md:py-16 bg-zinc-950">
+          <div className="container mx-auto px-4 md:px-6">
+            <h2 className="text-2xl md:text-3xl font-bold mb-6 md:mb-8">What's new?</h2>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
               {promos.map((promo) => (
                   <PromoCard key={promo.id} title={promo.title} image={promo.image} />
               ))}

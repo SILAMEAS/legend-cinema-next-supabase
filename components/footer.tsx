@@ -4,8 +4,8 @@ import { Facebook, Instagram, Twitter, Youtube, Mail, Phone, MapPin } from "luci
 export function Footer() {
     return (
         <footer className="bg-zinc-950 border-t border-zinc-900">
-            <div className="container mx-auto px-6 py-12">
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
+            <div className="container mx-auto px-4 md:px-6 py-8 md:py-12">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 mb-6 md:mb-8">
                     {/* Brand Section */}
                     <div>
                         <div className="flex flex-col items-start mb-4">
@@ -14,7 +14,7 @@ export function Footer() {
                                     <div key={i} className="w-2 h-2 bg-red-600 rounded-sm" />
                                 ))}
                             </div>
-                            <h2 className="text-2xl font-bold tracking-[0.3em] text-white">LEGEND</h2>
+                            <h2 className="text-xl md:text-2xl font-bold tracking-[0.3em] text-white">LEGEND</h2>
                             <div className="text-[8px] tracking-[0.2em] text-zinc-400">CINEMAS</div>
                         </div>
                         <p className="text-zinc-400 text-sm mb-4">
@@ -137,10 +137,9 @@ export function Footer() {
                     </div>
                 </div>
 
-                {/* Bottom Bar */}
-                <div className="border-t border-zinc-900 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+                <div className="border-t border-zinc-900 pt-6 md:pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-center md:text-left">
                     <p className="text-zinc-500 text-sm">© 2025 Legend Cinemas. All rights reserved.</p>
-                    <div className="flex gap-6 text-sm">
+                    <div className="flex flex-wrap justify-center gap-4 md:gap-6 text-sm">
                         <Link href="#" className="text-zinc-500 hover:text-white transition-colors">
                             Sitemap
                         </Link>
