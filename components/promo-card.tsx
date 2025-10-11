@@ -7,7 +7,7 @@ interface PromoCardProps {
     link?: string
 }
 
-export function PromoCard({ title, image, link }: PromoCardProps) {
+export function PromoCard({ title, image }: PromoCardProps) {
     return (
         <div className="group relative overflow-hidden rounded-xl bg-zinc-900 transition-all hover:scale-105">
             <div className="relative aspect-[4/3] sm:aspect-[16/9] overflow-hidden">
