@@ -1,4 +1,10 @@
+
 export enum EnumTableName{
     Profile='Profile',
-    Cinema= "Cinema"
+    Cinema= "Cinema",
+    Movie="Movie",
+    Promotion="Promotion",
+    FoodAndBeverage="FoodAndBeverage",
+    Offer="Offer",
+    Category="Category"
 }

@@ -5,12 +5,12 @@ import { Button } from "@/components/ui/button"
 interface FnbItemCardProps {
     name: string
     description: string
-    price: string
+    price: number
     image: string
     category: string
 }
 
-export function FnbItemCard({ name, description, price, image, category }: FnbItemCardProps) {
+export function FnbItemCard({ name, description, price, image, category }: Readonly<FnbItemCardProps>) {
     return (
         <div className="group relative overflow-hidden rounded-xl bg-zinc-900 transition-all hover:scale-105">
             <div className="relative aspect-square overflow-hidden">
@@ -32,7 +32,7 @@ export function FnbItemCard({ name, description, price, image, category }: FnbIt
                 </div>
 
                 <div className="flex items-center justify-between">
-                    <span className="text-2xl font-bold text-red-500">{price}</span>
+                    <span className="text-2xl font-bold text-red-500">{price}$</span>
                     <Button size="sm" className="bg-red-600 hover:bg-red-700 text-white">
                         <Plus className="w-4 h-4 mr-1" />
                         Add

@@ -2,14 +2,14 @@ import {ANY, TypeCreateUser} from "../commons/type";
 import {EnumPropertyKey} from "../enum/EnumPropertyKey";
 import {EnumTableName} from "../enum/EnumTable";
 import {createClient} from "@/lib/supabase/client";
-import {_insertData} from "@/utils/api/__general";
+import {_insert} from "@/utils/api/__general";
 import {Session, User} from "@supabase/auth-js";
 
 /** ------------------------------------------------------ */
 /** ---------------      GET SESSION     ----------------- */ 
 /** ------------------------------------------------------ */  
 export async function _getUserLogin(){
-    const supabase =  await createClient();
+    const supabase =  createClient();
     try {
       const res =  await supabase.auth.getSession();
       return res.data.session?.user;
@@ -22,7 +22,7 @@ export async function _getUserLogin(){
 /** ---------------      GET Profile     ----------------- */
 /** ------------------------------------------------------ */ 
 export async function _getProfile() {
-    const supabase =  await createClient();
+    const supabase =  createClient();
     try {
       const user = await _getUserLogin();
       return await supabase.from(EnumTableName.Profile).select().eq(EnumPropertyKey.user_id,user?.id).single();
@@ -37,7 +37,7 @@ export async function _getProfile() {
 export async function _createProfile( data: {     user: User | null  ,   session: Session | null }) {
     try {
         const _email = data.user?.email;
-        return await _insertData<TypeCreateUser>({
+        return await _insert<TypeCreateUser>({
             tableName:EnumTableName.Profile,
             data:{
                 email:`${_email}`,
