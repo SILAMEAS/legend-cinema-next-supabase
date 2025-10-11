@@ -1,5 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
-import { __get_profile, _db_view_data, _get_user_login } from "@/utils/api/method";
+import { __get_profile } from "@/utils/api/method";
 import { FormatJSON } from "@/utils/commons/FormatJSON";
 
 export default async function HomePage() {
