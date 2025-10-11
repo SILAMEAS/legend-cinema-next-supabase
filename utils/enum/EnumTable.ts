@@ -1,3 +1,4 @@
 export enum EnumTableName{
-    Profile='Profile'
+    Profile='Profile',
+    Cinema= "Cinema"
 }

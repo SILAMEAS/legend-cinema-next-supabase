@@ -1,29 +1,21 @@
 "use client";
 
-import { cn } from "@/lib/utils";
-import { createClient } from "@/lib/supabase/client";
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import {cn} from "@/lib/utils";
+import {createClient} from "@/lib/supabase/client";
+import {Button} from "@/components/ui/button";
+import {Card, CardContent, CardDescription, CardHeader, CardTitle,} from "@/components/ui/card";
+import {Input} from "@/components/ui/input";
+import {Label} from "@/components/ui/label";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
-import { _db_insert_data } from "@/utils/api/method";
-import { TypeCreateUser } from "@/utils/api/type";
-import { EnumTableName } from "@/utils/enum/EnumTable";
-import { EnumPage } from "@/utils/enum/EnumPage";
+import {useRouter} from "next/navigation";
+import {useState} from "react";
+import {EnumPage} from "@/utils/enum/EnumPage";
+import {_createProfile} from "@/utils/api/__profile";
 
 export function SignUpForm({
   className,
   ...props
-}: React.ComponentPropsWithoutRef<"div">) {
+                           }: Readonly<React.ComponentPropsWithoutRef<"div">>) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [repeatPassword, setRepeatPassword] = useState("");
@@ -44,7 +36,7 @@ export function SignUpForm({
     }
 
     try {
-      const {data, error } = await supabase.auth.signUp({
+      const { error,data } = await supabase.auth.signUp({
         email,
         password,
         options: {
@@ -52,18 +44,9 @@ export function SignUpForm({
         },
       });
       if (error) throw error;
-      /** _db_insert_data :  calling add new user to db */ 
-      const _email = data.user?.email;
+      /** _db_insert_data :  calling add new user to db */
 
-      await _db_insert_data<TypeCreateUser>({
-        supabase,
-        tableName:EnumTableName.Profile,
-        data:{
-          email:`${_email}`,
-          name:`${_email?.slice(0,5)}`,
-          user_id:`${data.user?.id}`
-        }
-      });
+      await _createProfile(data)
       router.push(EnumPage.AUTH_SUCCESS);
     } catch (error: unknown) {
       setError(error instanceof Error ? error.message : "An error occurred");

@@ -1,42 +1,10 @@
-import { Header } from "@/components/header"
-import { Footer } from "@/components/footer"
-import { CinemaCard } from "@/components/cinema-card"
+import {Header} from "@/components/header"
+import {Footer} from "@/components/footer"
+import {CinemaCard} from "@/components/cinema-card"
+import {_getsCinema} from "@/utils/api/__cinema";
 
-export default function CinemasPage() {
-    const cinemas = [
-        {
-            id: 1,
-            name: "Legend Cinema Phnom Penh",
-            address: "Vattanac Capital Mall, Level 5, Phnom Penh",
-            phone: "+855 23 969 696",
-            hours: "10:00 AM - 11:00 PM",
-            image: "https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=800&q=80",
-        },
-        {
-            id: 2,
-            name: "Legend Cinema Toul Kork",
-            address: "Chip Mong 271 Mega Mall, Level 4, Toul Kork",
-            phone: "+855 23 969 697",
-            hours: "10:00 AM - 11:00 PM",
-            image: "https://images.unsplash.com/photo-1517604931442-7e0c8ed2963c?w=800&q=80",
-        },
-        {
-            id: 3,
-            name: "Legend Cinema Aeon Mall",
-            address: "Aeon Mall Sen Sok City, Level 3, Sen Sok",
-            phone: "+855 23 969 698",
-            hours: "10:00 AM - 11:00 PM",
-            image: "https://images.unsplash.com/photo-1478720568477-152d9b164e26?w=800&q=80",
-        },
-        {
-            id: 4,
-            name: "Legend Cinema Siem Reap",
-            address: "Lucky Mall, Level 2, Siem Reap",
-            phone: "+855 63 969 699",
-            hours: "10:00 AM - 11:00 PM",
-            image: "https://images.unsplash.com/photo-1440404653325-ab127d49abc1?w=800&q=80",
-        },
-    ]
+export default async function CinemasPage() {
+    const cinemas = await _getsCinema();
 
     return (
         <div className="min-h-screen bg-black text-white">
@@ -50,7 +18,7 @@ export default function CinemasPage() {
                     </p>
 
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8">
-                        {cinemas.map((cinema) => (
+                        {cinemas?.data?.map((cinema) => (
                             <CinemaCard
                                 key={cinema.id}
                                 name={cinema.name}
