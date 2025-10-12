@@ -11,7 +11,7 @@ import {__format_profile} from "@/utils/api/format_response/__format_profile";
 /** ------------------------------------------------------ */
 /** ---------------      GET Profile     ----------------- */
 /** ------------------------------------------------------ */
-export async function _getProfile(user: User) {
+export async function _getProfile(user: User|null) {
     const supabase =  createClient();
     try {
         const res = await supabase.from(EnumTableName.Profile).select(
@@ -24,11 +24,14 @@ export async function _getProfile(user: User) {
         ).eq(EnumPropertyKey.user_id, user?.id).single();
 
         const data = res.data;
+        if(res.error||user===null){
+            throw new Error(res.error?.message ?? 'User null')
+        }
 
         // 🧠 Transform the nested structure into flat one
         const formatted = {
             ...data,
-            user_id: user.id,
+            user_id: user?.id,
             role: (res.data?.role as ANY).role, // flatten role object
         };
 
