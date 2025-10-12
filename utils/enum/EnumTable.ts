@@ -6,5 +6,6 @@ export enum EnumTableName{
     Promotion="Promotion",
     FoodAndBeverage="FoodAndBeverage",
     Offer="Offer",
-    Category="Category"
+    Category="Category",
+    Role="Role"
 }

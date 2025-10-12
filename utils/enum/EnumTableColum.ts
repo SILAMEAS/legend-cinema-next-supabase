@@ -6,5 +6,7 @@ export enum EnumTableColum{
     DESCRIPTION="description",
     CATEGORY="category",
     CATEGORY_ID="category.id",
-    CATEGORY_NAME="category.name"
+    CATEGORY_NAME="category.name",
+    EMAIl="email",
+    ROLE="role"
 }
