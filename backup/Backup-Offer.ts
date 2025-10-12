@@ -1,4 +1,4 @@
-import {_tb_offer} from "@/utils/api/type-from-tb/_tb_offer";
+import {_tb_offer} from "@/utils/api/supabase_tb/_tb_offer";
 
 export const BackupOffer: Array<_tb_offer> = [
     {

@@ -1,6 +1,6 @@
 import {EnumTableName} from "@/utils/enum/EnumTable";
 import {_gets, _inserts} from "@/utils/api/__general";
-import {_tb_movie} from "@/utils/api/type-from-tb/_tb_movie";
+import {_tb_movie} from "@/utils/api/supabase_tb/_tb_movie";
 
 export async function _insertMovies<T extends _tb_movie>(data:Array<T>) {
     return await _inserts<T>({tableName:EnumTableName.Movie,data})

@@ -1,4 +1,4 @@
-import {_tb_food_and_beverage} from "@/utils/api/type-from-tb/_tb_food_and_beverage";
+import {_tb_food_and_beverage} from "@/utils/api/supabase_tb/_tb_food_and_beverage";
 
 export const Backup_Food_And_Beverage: Array<_tb_food_and_beverage> = [
     {

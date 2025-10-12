@@ -1,4 +1,4 @@
-import {_tb_movie} from "@/utils/api/type-from-tb/_tb_movie";
+import {_tb_movie} from "@/utils/api/supabase_tb/_tb_movie";
 
 export const BackupMovie:Array<_tb_movie> = [
     {

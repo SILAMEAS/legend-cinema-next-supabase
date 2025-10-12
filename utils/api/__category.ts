@@ -1,6 +1,6 @@
 import {EnumTableName} from "@/utils/enum/EnumTable";
 import {_get, _gets} from "@/utils/api/__general";
-import {_tb_category} from "@/utils/api/type-from-tb/_tb_category";
+import {_tb_category} from "@/utils/api/supabase_tb/_tb_category";
 import {EnumPropertyKey} from "@/utils/enum/EnumPropertyKey";
 
 
