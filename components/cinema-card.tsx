@@ -10,7 +10,7 @@ interface CinemaCardProps {
     image: string
 }
 
-export function CinemaCard({ name, address, phone, hours, image }: CinemaCardProps) {
+export function CinemaCard({ name, address, phone, hours, image }: Readonly<CinemaCardProps>) {
     return (
         <div className="group relative overflow-hidden rounded-xl bg-zinc-900 transition-all hover:scale-105">
             <div className="relative aspect-[4/3] sm:aspect-[16/9] overflow-hidden">

@@ -1,5 +1,6 @@
 import Link from "next/link"
 import { Facebook, Instagram, Twitter, Youtube, Mail, Phone, MapPin } from "lucide-react"
+import {EnumPage} from "@/utils/enum/EnumPage";
 
 export function Footer() {
     return (
@@ -63,17 +64,17 @@ export function Footer() {
                                 </Link>
                             </li>
                             <li>
-                                <Link href="/cinemas" className="text-zinc-400 hover:text-white transition-colors">
+                                <Link href={EnumPage.USER_CINEMAS} className="text-zinc-400 hover:text-white transition-colors">
                                     Our Cinemas
                                 </Link>
                             </li>
                             <li>
-                                <Link href="/offers" className="text-zinc-400 hover:text-white transition-colors">
+                                <Link href={EnumPage.USER_OFFERS} className="text-zinc-400 hover:text-white transition-colors">
                                     Special Offers
                                 </Link>
                             </li>
                             <li>
-                                <Link href="/fnb" className="text-zinc-400 hover:text-white transition-colors">
+                                <Link href={EnumPage.USER_FNB} className="text-zinc-400 hover:text-white transition-colors">
                                     Food & Beverage
                                 </Link>
                             </li>

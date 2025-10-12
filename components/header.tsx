@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button"
 import Image from "next/image"
 import Link from "next/link"
 import { useState } from "react"
+import {EnumPage} from "@/utils/enum/EnumPage";
 
 export function Header() {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
@@ -32,7 +33,7 @@ export function Header() {
                         </div>
 
                         {/* Logo - centered on mobile */}
-                        <Link href="/" className="flex flex-col items-center flex-1 lg:flex-none">
+                        <Link href={EnumPage.ROOT} className="flex flex-col items-center flex-1 lg:flex-none">
                             <div className="flex gap-[2px] mb-1">
                                 {[...Array(5)].map((_, i) => (
                                     <div key={i} className="w-1.5 h-1.5 md:w-2 md:h-2 bg-red-600 rounded-sm" />
@@ -87,17 +88,17 @@ export function Header() {
                 <div className="container mx-auto px-6">
                     <div className="flex items-center justify-between py-4">
                         <div className="flex items-center gap-8">
-                            <Link href="/" className="flex items-center gap-2 text-zinc-400 hover:text-white">
+                            <Link href={EnumPage.ROOT} className="flex items-center gap-2 text-zinc-400 hover:text-white">
                                 <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                                     <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" />
                                 </svg>
                                 Home
                             </Link>
-                            <Link href="/cinemas" className="flex items-center gap-2 text-zinc-400 hover:text-white">
+                            <Link href={EnumPage.USER_CINEMAS} className="flex items-center gap-2 text-zinc-400 hover:text-white">
                                 <MapPin className="w-5 h-5" />
                                 Cinemas
                             </Link>
-                            <Link href="/offers" className="flex items-center gap-2 text-zinc-400 hover:text-white">
+                            <Link href={EnumPage.USER_OFFERS} className="flex items-center gap-2 text-zinc-400 hover:text-white">
                                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path
                                         strokeLinecap="round"
@@ -108,7 +109,7 @@ export function Header() {
                                 </svg>
                                 Offers
                             </Link>
-                            <Link href="/fnb" className="flex items-center gap-2 text-zinc-400 hover:text-white">
+                            <Link href={EnumPage.USER_FNB} className="flex items-center gap-2 text-zinc-400 hover:text-white">
                                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                                 </svg>
@@ -144,7 +145,7 @@ export function Header() {
 
                         <nav className="space-y-4">
                             <Link
-                                href="/"
+                                href={EnumPage.ROOT}
                                 className="flex items-center gap-3 text-lg text-zinc-400 hover:text-white py-3 border-b border-zinc-900"
                                 onClick={() => setMobileMenuOpen(false)}
                             >
@@ -154,7 +155,7 @@ export function Header() {
                                 Home
                             </Link>
                             <Link
-                                href="/cinemas"
+                                href={EnumPage.USER_CINEMAS}
                                 className="flex items-center gap-3 text-lg text-zinc-400 hover:text-white py-3 border-b border-zinc-900"
                                 onClick={() => setMobileMenuOpen(false)}
                             >
@@ -162,7 +163,7 @@ export function Header() {
                                 Cinemas
                             </Link>
                             <Link
-                                href="/offers"
+                                href={EnumPage.USER_OFFERS}
                                 className="flex items-center gap-3 text-lg text-zinc-400 hover:text-white py-3 border-b border-zinc-900"
                                 onClick={() => setMobileMenuOpen(false)}
                             >
@@ -177,7 +178,7 @@ export function Header() {
                                 Offers
                             </Link>
                             <Link
-                                href="/fnb"
+                                href={EnumPage.USER_FNB}
                                 className="flex items-center gap-3 text-lg text-zinc-400 hover:text-white py-3 border-b border-zinc-900"
                                 onClick={() => setMobileMenuOpen(false)}
                             >
