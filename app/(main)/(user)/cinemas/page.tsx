@@ -1,14 +1,19 @@
+"use client"
 import {Header} from "@/components/header"
 import {Footer} from "@/components/footer"
 import {CinemaCard} from "@/components/cinema-card"
 import {_getsCinema} from "@/utils/api/__cinema";
+import useFetchData from "@/utils/hooks/useFetchData";
+import {_tb_cinema} from "@/utils/api/supabase_tb/_tb_cinema";
+import Loading from "@/app/loading";
 
-export default async function CinemasPage() {
-    const cinemas = await _getsCinema();
-
+export default function CinemasPage() {
+    const {data: cinemas, loading} = useFetchData<_tb_cinema>({
+        fetcher: _getsCinema,
+    });
     return (
         <div className="min-h-screen bg-black text-white">
-            <Header />
+            <Header/>
 
             <section className="py-8 md:py-16">
                 <div className="container mx-auto px-4 md:px-6">
@@ -18,21 +23,22 @@ export default async function CinemasPage() {
                     </p>
 
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8">
-                        {cinemas?.data?.map((cinema) => (
-                            <CinemaCard
-                                key={cinema.id}
-                                name={cinema.name}
-                                address={cinema.address}
-                                phone={cinema.phone}
-                                hours={cinema.hours}
-                                image={cinema.image}
-                            />
-                        ))}
+                        {
+                            loading ? <Loading/> : cinemas?.map((cinema) => (
+                                <CinemaCard
+                                    key={cinema.id}
+                                    name={cinema.name}
+                                    address={cinema.address}
+                                    phone={cinema.phone}
+                                    hours={cinema.hours}
+                                    image={cinema.image}
+                                />
+                            ))}
                     </div>
                 </div>
             </section>
 
-            <Footer />
+            <Footer/>
         </div>
     )
 }

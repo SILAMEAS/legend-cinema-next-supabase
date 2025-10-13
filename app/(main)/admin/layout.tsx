@@ -1,13 +1,24 @@
+"use client";
 import type React from "react"
 import {Film, ImageIcon, LayoutDashboard, LogOut, MapPin, Settings, Tag, UtensilsCrossed} from "lucide-react"
 import Link from "next/link"
 import {EnumPage} from "@/utils/enum/EnumPage";
+import {useAuth} from "@/context/AuthContext";
+import {EnumRole} from "@/utils/enum/EnumRole";
+import {redirect} from "next/navigation";
 
 export default function AdminLayout({
                                         children,
                                     }: Readonly<{
     children: React.ReactNode
 }>) {
+    const {profile, loading} = useAuth();
+    if (loading) {
+        return null;
+    }
+    if (profile?.role !== EnumRole.ADMIN) {
+        redirect(EnumPage.ROOT);
+    }
     return (
         <div className="flex h-screen bg-gray-950">
             {/* Sidebar */}

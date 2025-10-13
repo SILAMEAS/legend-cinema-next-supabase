@@ -1,16 +1,20 @@
-import { Header } from "@/components/header"
-import { Footer } from "@/components/footer"
-import { OfferCard } from "@/components/offer-card"
-import {_getOffers, _insertOffers} from "@/utils/api/__offer";
-import {BackupOffer} from "@/backup/Backup-Offer";
+"use client"
+import {Header} from "@/components/header"
+import {Footer} from "@/components/footer"
+import {OfferCard} from "@/components/offer-card"
+import {_getOffers} from "@/utils/api/__offer";
+import useFetchData from "@/utils/hooks/useFetchData";
+import {_tb_offer} from "@/utils/api/supabase_tb/_tb_offer";
+import Loading from "@/app/loading";
 
-export default async function OffersPage() {
-    await _insertOffers(BackupOffer);
-    const offers = await _getOffers();
+export default function OffersPage() {
+    const {data: offers,loading} = useFetchData<_tb_offer>({
+        fetcher: _getOffers,
+    })
 
     return (
         <div className="min-h-screen bg-black text-white">
-            <Header />
+            <Header/>
 
             <section className="py-8 md:py-16">
                 <div className="container mx-auto px-4 md:px-6">
@@ -20,7 +24,7 @@ export default async function OffersPage() {
                     </p>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-                        {offers?.data?.map((offer) => (
+                        {loading?<Loading/>: offers?.map((offer) => (
                             <OfferCard
                                 key={offer.id}
                                 title={offer.title}
@@ -34,7 +38,7 @@ export default async function OffersPage() {
                 </div>
             </section>
 
-            <Footer />
+            <Footer/>
         </div>
     )
 }

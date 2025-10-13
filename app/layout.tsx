@@ -4,6 +4,7 @@ import { ThemeProvider } from "next-themes";
 import "./globals.css";
 import NextTopLoader from 'nextjs-toploader';
 import {AuthProvider} from "@/context/AuthContext";
+import React from "react";
 const defaultUrl = process.env.VERCEL_URL
   ? `https://${process.env.VERCEL_URL}`
   : "http://localhost:4000";

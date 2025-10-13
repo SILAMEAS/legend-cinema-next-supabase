@@ -5,7 +5,9 @@ import {EnumPropertyKey} from "@/utils/enum/EnumPropertyKey";
 
 
 export async function _getCategories() {
-    return await _gets<Array<_tb_category>>({tableName: EnumTableName.Category})
+    const res = await _gets<Array<_tb_category>>({tableName: EnumTableName.Category});
+    console.log("_getCategories",res)
+    return res;
 }
 
 export async function _getCategoryId(id: number) {

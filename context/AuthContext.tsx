@@ -35,7 +35,7 @@ export function AuthProvider({ children }: Readonly<{ children: React.ReactNode 
 
         };
 
-        getUser();
+        getUser().then(r => r);
 
         // 🔹 Listen for login/logout
         const { data: subscription } = supabase.auth.onAuthStateChange(
