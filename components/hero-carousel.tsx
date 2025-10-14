@@ -1,33 +1,16 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import {useEffect, useState} from "react"
 import Image from "next/image"
-import { ChevronLeft, ChevronRight } from "lucide-react"
+import {ChevronLeft, ChevronRight} from "lucide-react"
+import useFetchData from "@/utils/hooks/useFetchData";
+import {_getBanners} from "@/utils/api/__banner";
 
-const slides = [
-    {
-        image: "https://coolbeans.sgp1.digitaloceanspaces.com/legend-cinema-prod/e4996ca9-03d4-4a65-8374-10ee99c5be23.jpeg",
-        alt: "Movie promotion banner 1",
-    },
-    {
-        image: "https://coolbeans.sgp1.digitaloceanspaces.com/legend-cinema-prod/5fc3097e-92d6-40a9-ad08-57da9cf79ece.jpeg",
-        alt: "Movie promotion banner 2",
-    },
-    {
-        image: "https://coolbeans.sgp1.digitaloceanspaces.com/legend-cinema-prod/bab652d6-8f39-42d8-98c5-2661fc0a3bdd.jpeg",
-        alt: "Movie promotion banner 3",
-    },
-    {
-        image: "https://coolbeans.sgp1.digitaloceanspaces.com/legend-cinema-prod/0ee58116-137c-4301-a9dd-875bb7d74bd9.jpeg",
-        alt: "Movie promotion banner 4",
-    },
-    {
-        image: "https://coolbeans.sgp1.digitaloceanspaces.com/legend-cinema-prod/c4d845c4-8144-4aff-8a05-7cee65183da3.jpeg",
-        alt: "Movie promotion banner 5",
-    },
-]
 
 export function HeroCarousel() {
+    const {data: slides} = useFetchData({
+        fetcher: _getBanners
+    })
     const [currentSlide, setCurrentSlide] = useState(0)
 
     useEffect(() => {
@@ -52,7 +35,7 @@ export function HeroCarousel() {
             <div className="relative w-full h-full">
                 {slides.map((slide, index) => (
                     <div
-                        key={index}
+                        key={slide.id+slide.alt}
                         className={`absolute inset-0 transition-opacity duration-700 ${
                             index === currentSlide ? "opacity-100" : "opacity-0"
                         }`}
@@ -74,7 +57,7 @@ export function HeroCarousel() {
                 className="absolute left-2 md:left-4 top-1/2 -translate-y-1/2 z-20 p-2 md:p-3 rounded-full bg-black/50 hover:bg-black/70 transition-colors"
                 aria-label="Previous slide"
             >
-                <ChevronLeft className="w-4 h-4 md:w-6 md:h-6 text-white" />
+                <ChevronLeft className="w-4 h-4 md:w-6 md:h-6 text-white"/>
             </button>
 
             <button
@@ -82,7 +65,7 @@ export function HeroCarousel() {
                 className="absolute right-2 md:right-4 top-1/2 -translate-y-1/2 z-20 p-2 md:p-3 rounded-full bg-black/50 hover:bg-black/70 transition-colors"
                 aria-label="Next slide"
             >
-                <ChevronRight className="w-4 h-4 md:w-6 md:h-6 text-white" />
+                <ChevronRight className="w-4 h-4 md:w-6 md:h-6 text-white"/>
             </button>
 
             {/* Slide Indicators */}

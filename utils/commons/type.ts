@@ -1,11 +1,15 @@
 import { SupabaseClient } from "@supabase/supabase-js";
 import {EnumOperator} from "@/utils/enum/EnumOperator";
+import {Session, User} from "@supabase/auth-js";
 
 export interface TypeCreateUser{
     email:string,
     name:string,
     user_id:string
 }
+
+export interface TypeCreateProfile{     user: User | null  ,   session: Session | null }
+
 
 export type ANY=any
 export type UNKONWN=unknown

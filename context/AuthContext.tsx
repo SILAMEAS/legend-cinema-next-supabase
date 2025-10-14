@@ -27,7 +27,7 @@ export function AuthProvider({ children }: Readonly<{ children: React.ReactNode 
             setLoading(true);
             const { data } = await supabase.auth.getUser();
             if(data.user){
-                const {data:profileData} = await  _getProfile(data.user);
+                const {data:profileData} = await  _getProfile(data.user.id);
                 setProfile(profileData);
                 setUser(data?.user ?? null);
                 setLoading(false);

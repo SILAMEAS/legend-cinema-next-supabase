@@ -7,5 +7,6 @@ export enum EnumTableName{
     FoodAndBeverage="FoodAndBeverage",
     Offer="Offer",
     Category="Category",
-    Role="Role"
+    Role="Role",
+    Banner="Banner",
 }
