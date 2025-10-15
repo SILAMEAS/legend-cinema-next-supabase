@@ -1,12 +1,26 @@
-export enum EnumTableColum{
-    ID="id",
-    NAME="name",
-    IMAGE="image",
-    PRICE="price",
-    DESCRIPTION="description",
-    CATEGORY="category",
-    CATEGORY_ID="category.id",
-    CATEGORY_NAME="category.name",
-    EMAIl="email",
-    ROLE="role"
+export enum EnumTableColum {
+    ID = "id",
+    NAME = "name",
+    IMAGE = "image",
+    PRICE = "price",
+    DESCRIPTION = "description",
+    CATEGORY = "category",
+    CATEGORY_ID = "category.id",
+    CATEGORY_NAME = "category.name",
+    EMAIL = "email", // ✅ fixed capitalization,
+    ROLE = "role",
+    TITLE = "title",
+    RATING = "rating",
+    DURATION = "duration",
+    GENRE = "genre",
+    RELEASE_DATE = "releaseDate",
+    STATUS = "status",
+    CREATED_AT = "createdAt",
+    ALT = 'alt',
+    ADDRESS = "address",
+    PHONE = "phone",
+    HOURS="hours",
+    VALID_UNTIL = "validUntil",
+    DISCOUNT = "discount"
+
 }

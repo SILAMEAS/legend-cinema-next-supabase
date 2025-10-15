@@ -18,7 +18,7 @@ export async function _getProfile(userId: string | number) {
             `
             ${EnumTableColum.ID},
             ${EnumTableColum.NAME},
-            ${EnumTableColum.EMAIl},
+            ${EnumTableColum.EMAIL},
             role:Role(role)
             `
         ).eq(EnumPropertyKey.user_id, userId).single();
