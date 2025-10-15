@@ -16,7 +16,7 @@ export default function AdminLayout({
     if (loading) {
         return null;
     }
-    if (profile?.role !== EnumRole.ADMIN) {
+    if (profile?.role.name !== EnumRole.ADMIN) {
         redirect(EnumPage.ROOT);
     }
     return (

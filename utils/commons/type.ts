@@ -26,3 +26,8 @@ export type typeFilters = {
     operator?:keyof typeof EnumOperator;
     value: string | number | string[];
 };
+
+export interface IStatus{
+    id:number,
+    name:string,
+}

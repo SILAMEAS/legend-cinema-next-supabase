@@ -4,14 +4,14 @@ import {EnumTableName} from "../enum/EnumTable";
 import {createClient} from "@/lib/supabase/client";
 import {_insert} from "@/utils/api/__general";
 import {EnumTableColum} from "@/utils/enum/EnumTableColum";
-import {__format_profile} from "@/utils/api/format_response/__format_profile";
+import {_tb_profile} from "@/utils/api/supabase_tb/_tb_profile";
 
 
 /** ------------------------------------------------------ */
 
 /** ---------------      GET Profile     ----------------- */
 /** ------------------------------------------------------ */
-export async function _getProfile(userId: string | number) {
+export async function _getProfile(userId: string) {
     const supabase = createClient();
     try {
         const res = await supabase.from(EnumTableName.Profile).select(
@@ -19,26 +19,13 @@ export async function _getProfile(userId: string | number) {
             ${EnumTableColum.ID},
             ${EnumTableColum.NAME},
             ${EnumTableColum.EMAIL},
-            role:Role(role)
+            role:Role(id,name)
             `
         ).eq(EnumPropertyKey.user_id, userId).single();
-
-        const data = res.data;
         if (res.error || userId === null) {
             throw new Error(res.error?.message ?? 'User null')
         }
-
-        // 🧠 Transform the nested structure into flat one
-        const formatted = {
-            ...data,
-            user_id: userId,
-            role: (res.data?.role as ANY).role, // flatten role object
-        };
-
-        return {
-            ...res,
-            data: formatted as unknown as __format_profile
-        }
+        return {...res,data:res.data as unknown as _tb_profile};
     } catch (error: unknown) {
         throw error instanceof Error ? (error as ANY).message : "An error occurred";
     }
