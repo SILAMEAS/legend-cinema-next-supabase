@@ -1,3 +1,4 @@
+"use client"
 import {Header} from "@/components/header"
 import {Footer} from "@/components/footer"
 import {HeroCarousel} from "@/components/hero-carousel"
@@ -5,8 +6,10 @@ import {MovieCard} from "@/components/movie-card"
 import {PromoCard} from "@/components/promo-card"
 import {_getMovies} from "@/utils/api/__movie";
 import {_getPromotions} from "@/utils/api/__promotion";
+import useFetchData from "@/utils/hooks/useFetchData";
+import {useAuth} from "@/context/AuthContext";
 
-export default async function Home() {
+export default function Home() {
     const dates = [
         {day: "Today", date: "10", month: "Oct"},
         {day: "Sat", date: "11", month: "Oct"},
@@ -14,9 +17,15 @@ export default async function Home() {
         {day: "Mon", date: "13", month: "Oct"},
         {day: "Tue", date: "14", month: "Oct"},
     ];
-    const movies = await _getMovies();
-    const promotion = await _getPromotions();
-
+    const {profile} = useAuth();
+    const {data: movies} = useFetchData({
+        fetcher: () => _getMovies(profile?.role?.name).then(res => ({
+            data: res.data,
+        })),
+    })
+    const {data: promotion} = useFetchData({
+        fetcher: _getPromotions
+    })
     return (
         <div className="min-h-screen bg-black text-white">
             <Header/>
@@ -50,7 +59,7 @@ export default async function Home() {
 
                     <div
                         className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 md:gap-6">
-                        {movies?.data?.map((movie) => (
+                        {movies?.map((movie) => (
                             <MovieCard
                                 key={movie.id}
                                 title={movie.title}
@@ -70,7 +79,7 @@ export default async function Home() {
                     <h2 className="text-2xl md:text-3xl font-bold mb-6 md:mb-8">What is new?</h2>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
-                        {promotion?.data?.map((promo) => (
+                        {promotion?.map((promo) => (
                             <PromoCard key={promo.id} title={promo.title} image={promo.image}/>
                         ))}
                     </div>
