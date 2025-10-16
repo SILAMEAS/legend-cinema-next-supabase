@@ -6,5 +6,6 @@ export interface _tb_cinema extends _tb_base{
     [EnumTableColum.IMAGE]:string,
     [EnumTableColum.ADDRESS]:string,
     [EnumTableColum.PHONE]:string,
-    [EnumTableColum.HOURS]:string
+    [EnumTableColum.HOURS]:string,
+    [EnumTableColum.ACTIVE]:boolean
 }

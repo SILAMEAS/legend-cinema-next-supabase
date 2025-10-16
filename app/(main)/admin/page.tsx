@@ -1,4 +1,8 @@
-import { Film, MapPin, Tag, TrendingUp, Users, DollarSign, UtensilsCrossed } from "lucide-react"
+"use client"
+import {DollarSign, Film, MapPin, Tag, TrendingUp, Users, UtensilsCrossed} from "lucide-react"
+import useFetchDataObject from "@/utils/hooks/useFetchDataObject";
+import {_getDashboard} from "@/utils/api/__dashboard";
+import {_tb_dashboard} from "@/utils/api/supabase_tb/_tb_dashboard";
 
 export default function AdminDashboard() {
     const stats = [
@@ -47,11 +51,16 @@ export default function AdminDashboard() {
     ]
 
     const recentMovies = [
-        { title: "Venom: The Last Dance", status: "Now Showing", bookings: 456 },
-        { title: "Terrifier 3", status: "Now Showing", bookings: 389 },
-        { title: "Smile 2", status: "Coming Soon", bookings: 0 },
-        { title: "Joker: Folie à Deux", status: "Now Showing", bookings: 567 },
+        {title: "Venom: The Last Dance", status: "Now Showing", bookings: 456},
+        {title: "Terrifier 3", status: "Now Showing", bookings: 389},
+        {title: "Smile 2", status: "Coming Soon", bookings: 0},
+        {title: "Joker: Folie à Deux", status: "Now Showing", bookings: 567},
     ]
+
+    const {data} = useFetchDataObject<_tb_dashboard>({
+        fetcher: _getDashboard
+    })
+    console.log("data", data);
 
     return (
         <div className="space-y-8">
@@ -66,7 +75,7 @@ export default function AdminDashboard() {
                                 <p className="text-sm text-gray-500 mt-2">{stat.change}</p>
                             </div>
                             <div className={`${stat.color} w-12 h-12 rounded-lg flex items-center justify-center`}>
-                                <stat.icon className="w-6 h-6 text-white" />
+                                <stat.icon className="w-6 h-6 text-white"/>
                             </div>
                         </div>
                     </div>
@@ -124,25 +133,27 @@ export default function AdminDashboard() {
             {/* Quick Actions - Updated to dark mode */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                 <button className="bg-red-600 hover:bg-red-700 text-white rounded-lg p-6 text-left transition-colors">
-                    <Film className="w-8 h-8 mb-2" />
+                    <Film className="w-8 h-8 mb-2"/>
                     <h4 className="font-semibold">Add New Movie</h4>
                     <p className="text-sm text-red-100 mt-1">Create a new movie listing</p>
                 </button>
 
                 <button className="bg-blue-600 hover:bg-blue-700 text-white rounded-lg p-6 text-left transition-colors">
-                    <Film className="w-8 h-8 mb-2" />
+                    <Film className="w-8 h-8 mb-2"/>
                     <h4 className="font-semibold">Add Banner</h4>
                     <p className="text-sm text-blue-100 mt-1">Upload promotional banner</p>
                 </button>
 
-                <button className="bg-green-600 hover:bg-green-700 text-white rounded-lg p-6 text-left transition-colors">
-                    <Tag className="w-8 h-8 mb-2" />
+                <button
+                    className="bg-green-600 hover:bg-green-700 text-white rounded-lg p-6 text-left transition-colors">
+                    <Tag className="w-8 h-8 mb-2"/>
                     <h4 className="font-semibold">Create Offer</h4>
                     <p className="text-sm text-green-100 mt-1">Add new promotional offer</p>
                 </button>
 
-                <button className="bg-purple-600 hover:bg-purple-700 text-white rounded-lg p-6 text-left transition-colors">
-                    <UtensilsCrossed className="w-8 h-8 mb-2" />
+                <button
+                    className="bg-purple-600 hover:bg-purple-700 text-white rounded-lg p-6 text-left transition-colors">
+                    <UtensilsCrossed className="w-8 h-8 mb-2"/>
                     <h4 className="font-semibold">Add F&B Item</h4>
                     <p className="text-sm text-purple-100 mt-1">Add menu item</p>
                 </button>

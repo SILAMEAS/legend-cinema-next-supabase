@@ -21,6 +21,8 @@ export enum EnumTableColum {
     PHONE = "phone",
     HOURS="hours",
     VALID_UNTIL = "validUntil",
-    DISCOUNT = "discount"
+    DISCOUNT = "discount",
+    ACTIVE="active",
+    BOOKING="booking",
 
 }

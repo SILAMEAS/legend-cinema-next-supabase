@@ -29,7 +29,7 @@ export async function _gets<T>({tableName, select, filters = [],notNull=[]}: {
 }) {
     const supabase =  createClient();
     try {
-        let query  = supabase.from(tableName).select(select);
+        let query  = supabase.from(tableName).select(select,{count:'exact'});
 
         // Apply all filters
         for (const f of filters) {
