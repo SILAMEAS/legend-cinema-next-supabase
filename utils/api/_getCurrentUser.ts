@@ -1,27 +1,25 @@
 /** ------------------------------------------------------ */
 /** ---------------      GET SESSION     ----------------- */
-import {createClient} from "@/lib/supabase/server";
+import {createClient} from "@/lib/supabase/client";
 import {ANY} from "@/utils/commons/type";
-import {User} from "@supabase/auth-js";
+import {Session} from "@supabase/auth-js";
 import {_getProfile} from "@/utils/api/__profile";
 import {_tb_profile} from "@/utils/api/supabase_tb/_tb_profile";
 import {EnumRole} from "@/utils/enum/EnumRole";
 
-type _getCurrentUserInterface = _tb_profile & Omit<User, keyof _tb_profile|"role">;
 
 /** ------------------------------------------------------ */
-export async function _getCurrentUser(): Promise<_getCurrentUserInterface> {
+export async function _getCurrentUser(): Promise<{ session: Session | null, profile: _tb_profile | null }> {
 
     try {
-        const supabase = await createClient();
-        const user = await supabase.auth.getUser().then(r => {
-            if (r.data.user === null) {
-                throw new Error("User null");
-            }
-            return r.data.user;
-        })
-        const profile = await _getProfile(user.id).then(r => r.data);
-        return {...user, ...profile} as unknown as _getCurrentUserInterface;
+        const supabase = createClient();
+        const session = await supabase.auth.getSession().then(r => r.data.session);
+        const userId = session?.user?.id;
+        if (userId) {
+            const profile = await _getProfile(userId).then(r => r.data);
+            return {session, profile};
+        }
+        return {session, profile: null}
     } catch (error: unknown) {
         throw error instanceof Error ? (error as ANY).message : "An error occurred";
     }
@@ -29,8 +27,18 @@ export async function _getCurrentUser(): Promise<_getCurrentUserInterface> {
 
 /** ------------------------------------------------------ */
 export async function _checkRole(): Promise<{ isUser: boolean, isAdmin: boolean }> {
-    const {role:{name}} = await _getCurrentUser();
-    const isAdmin = name===EnumRole.ADMIN;
-    const isUser = name===EnumRole.USER;
-    return {isUser, isAdmin};
+    const {profile} = await _getCurrentUser();
+    if (!profile) {
+        throw Error("Not logged in");
+    }
+    const response: { isUser: boolean, isAdmin: boolean } = {isAdmin: false, isUser: false};
+    const role = profile.role.name;
+    switch (role) {
+        case EnumRole.ADMIN:
+            return {...response, isAdmin: true};
+        case EnumRole.USER:
+            return {...response, isUser: true};
+        default:
+            return response;
+    }
 }

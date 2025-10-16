@@ -1,13 +1,16 @@
 "use client"
 
-import { useState } from "react"
-import { Plus, Search, Edit, Trash2, Eye } from "lucide-react"
+import {useState} from "react"
+import {Edit, Eye, Plus, Search, Trash2} from "lucide-react"
 import Link from "next/link"
-import { DeleteConfirmationModal } from "@/components/admin/delete-confirmation-modal"
-import { Toast } from "@/components/admin/toast"
+import {DeleteConfirmationModal} from "@/components/admin/delete-confirmation-modal"
+import {Toast} from "@/components/admin/toast"
 import {EnumPage} from "@/utils/enum/EnumPage";
 import {ANY} from "@/utils/commons/type";
 import Image from "next/image";
+import useFetchData from "@/utils/hooks/useFetchData";
+import {_getMovies} from "@/utils/api/__movie";
+import {EnumTableColum} from "@/utils/enum/EnumTableColum";
 
 export default function MoviesManagement() {
     const [searchQuery, setSearchQuery] = useState("")
@@ -21,53 +24,13 @@ export default function MoviesManagement() {
         null,
     )
     const [editModal, setEditModal] = useState<{ show: boolean; movie: ANY | null }>({ show: false, movie: null })
-
-    const movies = [
-        {
-            id: 1,
-            title: "Venom: The Last Dance",
-            genre: "Action, Sci-Fi",
-            duration: "109 min",
-            rating: "PG-13",
-            status: "Now Showing",
-            releaseDate: "2024-10-25",
-            poster: "/venom-movie-poster.jpg",
-        },
-        {
-            id: 2,
-            title: "Terrifier 3",
-            genre: "Horror",
-            duration: "125 min",
-            rating: "R",
-            status: "Now Showing",
-            releaseDate: "2024-10-11",
-            poster: "/terrifier-3-movie-poster.jpg",
-        },
-        {
-            id: 3,
-            title: "Smile 2",
-            genre: "Horror, Thriller",
-            duration: "127 min",
-            rating: "R",
-            status: "Coming Soon",
-            releaseDate: "2024-10-18",
-            poster: "/smile-2-movie-poster.jpg",
-        },
-        {
-            id: 4,
-            title: "Joker: Folie à Deux",
-            genre: "Drama, Thriller",
-            duration: "138 min",
-            rating: "R",
-            status: "Now Showing",
-            releaseDate: "2024-10-04",
-            poster: "/joker-2-movie-poster.png",
-        },
-    ]
+    const {data:movies}=useFetchData({
+        fetcher:_getMovies
+    })
 
     const filteredMovies = movies.filter((movie) => {
         const matchesSearch = movie.title.toLowerCase().includes(searchQuery.toLowerCase())
-        const matchesStatus = filterStatus === "all" || movie.status === filterStatus
+        const matchesStatus = filterStatus === "all" || movie[EnumTableColum.STATUS]?.[EnumTableColum.NAME] === filterStatus
         return matchesSearch && matchesStatus
     })
 
@@ -135,13 +98,13 @@ export default function MoviesManagement() {
                         className="bg-gray-900 rounded-lg shadow-lg border border-gray-800 overflow-hidden hover:border-red-500 transition-colors"
                     >
                         <div className="relative">
-                            <Image fill src={movie.poster || "/placeholder.svg"} alt={movie.title} className="w-full h-64 object-cover" />
+                            <Image fill src={movie[EnumTableColum.IMAGE] || "/placeholder.svg"} alt={movie.title} className="w-full h-64 object-cover" />
                             <span
                                 className={`absolute top-2 right-2 px-2 py-1 text-xs font-semibold rounded-full ${
-                                    movie.status === "Now Showing" ? "bg-green-500 text-white" : "bg-blue-500 text-white"
+                                    movie[EnumTableColum.STATUS]?.name === "Now Showing" ? "bg-green-500 text-white" : "bg-blue-500 text-white"
                                 }`}
                             >
-                {movie.status}
+                {movie[EnumTableColum.STATUS]?.name}
               </span>
                         </div>
                         <div className="p-4">

@@ -9,4 +9,5 @@ export enum EnumTableName{
     Category="Category",
     Role="Role",
     Banner="Banner",
+    MovieStatus="MovieStatus",
 }

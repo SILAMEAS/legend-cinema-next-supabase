@@ -1,6 +1,7 @@
 import { SupabaseClient } from "@supabase/supabase-js";
 import {EnumOperator} from "@/utils/enum/EnumOperator";
 import {Session, User} from "@supabase/auth-js";
+import {EnumTableColum} from "@/utils/enum/EnumTableColum";
 
 export interface TypeCreateUser{
     email:string,
@@ -28,6 +29,6 @@ export type typeFilters = {
 };
 
 export interface IStatus{
-    id:number,
-    name:string,
+    [EnumTableColum.ID]: string|number,
+    [EnumTableColum.NAME]: string
 }

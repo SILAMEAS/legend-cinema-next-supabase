@@ -2,9 +2,10 @@ import {EnumTableName} from "@/utils/enum/EnumTable";
 import {_tb_movie} from "@/utils/api/supabase_tb/_tb_movie";
 import {_gets} from "@/utils/api/__general";
 import {EnumTableColum} from "@/utils/enum/EnumTableColum";
-import {EnumRole} from "@/utils/enum/EnumRole";
+import {_checkRole} from "@/utils/api/_getCurrentUser";
 
-export async function _getMovies(role?:EnumRole) {
+export async function _getMovies() {
+    const {isAdmin} = await _checkRole();
     const select = [
         EnumTableColum.ID,
         EnumTableColum.TITLE,
@@ -12,9 +13,9 @@ export async function _getMovies(role?:EnumRole) {
         EnumTableColum.RATING,
         EnumTableColum.DURATION,
         EnumTableColum.GENRE,
-        `status:MovieStatus(id,name)`
+        `${EnumTableColum.STATUS}:${EnumTableName.MovieStatus} ( ${EnumTableColum.NAME} ,${EnumTableColum.ID})`,
     ]
-    if(role===EnumRole.ADMIN){
+    if (isAdmin) {
         select.push(EnumTableColum.RELEASE_DATE)
     }
     // Now fetch movies

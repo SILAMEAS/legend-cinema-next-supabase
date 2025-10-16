@@ -7,7 +7,6 @@ import {PromoCard} from "@/components/promo-card"
 import {_getMovies} from "@/utils/api/__movie";
 import {_getPromotions} from "@/utils/api/__promotion";
 import useFetchData from "@/utils/hooks/useFetchData";
-import {useAuth} from "@/context/AuthContext";
 
 export default function Home() {
     const dates = [
@@ -17,9 +16,8 @@ export default function Home() {
         {day: "Mon", date: "13", month: "Oct"},
         {day: "Tue", date: "14", month: "Oct"},
     ];
-    const {profile} = useAuth();
     const {data: movies} = useFetchData({
-        fetcher: () => _getMovies(profile?.role?.name).then(res => ({
+        fetcher: () => _getMovies().then(res => ({
             data: res.data,
         })),
     })
