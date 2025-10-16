@@ -6,7 +6,7 @@ interface UseFetchDataProps<T> {
     dependency?: ANY[];
 }
 
-export const useFetchData = <T, >({fetcher, dependency}: UseFetchDataProps<T>) => {
+export const useFetchData = <T, >({fetcher, dependency=[]}: UseFetchDataProps<T>) => {
         const [data, setData] = useState<T[]>([]);
         const [loading, setLoading] = useState(false);
         const [error, setError] = useState<Error | null>(null);
@@ -32,7 +32,7 @@ export const useFetchData = <T, >({fetcher, dependency}: UseFetchDataProps<T>) =
             return () => {
                 isMounted = false;
             };
-        }, []);
+        }, dependency);
 
         return {data, loading, error};
     }

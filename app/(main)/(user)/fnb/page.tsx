@@ -21,7 +21,7 @@ export default function FnbPage() {
         fetcher: () => _getFoodAndBeverages(categoryParam).then(res => ({
             data: res.data,
         })),
-        dependency: []
+        dependency: [categoryParam]
     })
     return (
         <div className="min-h-screen bg-black text-white">
