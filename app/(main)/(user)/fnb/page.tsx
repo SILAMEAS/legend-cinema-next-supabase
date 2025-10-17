@@ -1,28 +1,28 @@
 "use client"
 import {Header} from "@/components/header"
 import {Footer} from "@/components/footer"
-import {_getCategories} from "@/utils/api/__category";
 import {useQueryParams} from "@/utils/hooks/useQueryParams";
 import {EnumSearchQuery} from "@/utils/enum/EnumSearchQuery";
 import React from "react";
-import {_getFoodAndBeverages} from "@/utils/api/__foodAndBeverage";
 import {FnbItemCard} from "@/components/fnb-item-card";
-import {_tb_category} from "@/utils/api/supabase_tb/_tb_category";
-import {_tb_food_and_beverage} from "@/utils/api/supabase_tb/_tb_food_and_beverage";
-import useFetchData from "@/utils/hooks/useFetchData";
+import {useGetCategoryQuery} from "@/redux/services/category/category";
+import {useGetFoodAndBeverageQuery} from "@/redux/services/food_and_beverage/food_and_beverage";
 
 export default function FnbPage() {
     const {getParam, setParam} = useQueryParams();
     const categoryParam = getParam(EnumSearchQuery.CATEGORY) ?? "all";
-    const {data: categories, loading: loadingCategory} = useFetchData<_tb_category>({
-        fetcher: _getCategories
-    })
-    const {data: fnbItems, loading: loadingFnbItems} = useFetchData<_tb_food_and_beverage>({
-        fetcher: () => _getFoodAndBeverages(categoryParam).then(res => ({
-            data: res.data,
-        })),
-        dependency: [categoryParam]
-    })
+    const {currentData: categories, isLoading: loadingCategory} = useGetCategoryQuery();
+    // const {data: fnbItems, loading: loadingFnbItems} = useFetchData<_tb_food_and_beverage>({
+    //     fetcher: () => _getFoodAndBeverages(categoryParam).then(res => ({
+    //         data: res.data,
+    //     })),
+    //     dependency: [categoryParam]
+    // })
+    const {currentData: fnbItems, isLoading,isFetching} = useGetFoodAndBeverageQuery({
+        categoryName: getParam(EnumSearchQuery.CATEGORY) ?? "all"
+    }, {
+        refetchOnFocus: true
+    });
     return (
         <div className="min-h-screen bg-black text-white">
             <Header/>
@@ -37,7 +37,7 @@ export default function FnbPage() {
                     <div>
                         {/* Categories List */}
                         <div className="flex gap-2 md:gap-3 mb-8 md:mb-12 overflow-x-auto pb-2 scrollbar-hide">
-                            {categories?.map((category) => {
+                            {categories?.contents?.map((category) => {
                                 const isSelected = category.name.toLowerCase() === categoryParam.toLowerCase();
                                 return (
                                     <button
@@ -57,14 +57,14 @@ export default function FnbPage() {
 
                         {/* FNB Items Grid */}
                         <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
-                            {loadingFnbItems
+                            {(isFetching||isLoading)
                                 ? Array.from({length: 8}).map((_, idx) => (
                                     <div
                                         key={idx}
                                         className="h-40 bg-zinc-800 animate-pulse rounded-lg"
                                     />
                                 ))
-                                : fnbItems.map((item) => (
+                                : fnbItems?.contents?.map((item) => (
                                     <FnbItemCard
                                         key={item.id}
                                         name={item.name}

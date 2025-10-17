@@ -8,6 +8,7 @@ import {offer} from "@/redux/services/offer/offer";
 import {category} from "@/redux/services/category/category";
 import {promotion} from "@/redux/services/promotion/promotion";
 import {dashboard} from "@/redux/services/dashboard/dashboard";
+import {food_and_beverage} from "@/redux/services/food_and_beverage/food_and_beverage";
 
 export const store = configureStore({
     reducer: {
@@ -20,6 +21,7 @@ export const store = configureStore({
         [offer.reducerPath]: offer.reducer,
         [dashboard.reducerPath]: dashboard.reducer,
         [promotion.reducerPath]: promotion.reducer,
+        [food_and_beverage.reducerPath]: food_and_beverage.reducer,
     },
     middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware().concat(
@@ -30,7 +32,8 @@ export const store = configureStore({
             category.middleware,
             cinema.middleware,
             dashboard.middleware,
-            promotion.middleware
+            promotion.middleware,
+            food_and_beverage.middleware
         ),
 });
 

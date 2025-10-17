@@ -2,15 +2,11 @@
 import {Header} from "@/components/header"
 import {Footer} from "@/components/footer"
 import {CinemaCard} from "@/components/cinema-card"
-import {_getsCinema} from "@/utils/api/__cinema";
-import useFetchData from "@/utils/hooks/useFetchData";
-import {_tb_cinema} from "@/utils/api/supabase_tb/_tb_cinema";
 import Loading from "@/app/loading";
+import {useGetCinemaQuery} from "@/redux/services/cinema/cinema";
 
 export default function CinemasPage() {
-    const {data: cinemas, loading} = useFetchData<_tb_cinema>({
-        fetcher: _getsCinema,
-    });
+    const {currentData, isLoading} = useGetCinemaQuery();
     return (
         <div className="min-h-screen bg-black text-white">
             <Header/>
@@ -24,7 +20,7 @@ export default function CinemasPage() {
 
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8">
                         {
-                            loading ? <Loading/> : cinemas?.map((cinema) => (
+                            isLoading ? <Loading/> : currentData?.contents?.map((cinema) => (
                                 <CinemaCard
                                     key={cinema.id}
                                     name={cinema.name}

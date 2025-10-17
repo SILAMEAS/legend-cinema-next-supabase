@@ -12,6 +12,7 @@ export interface PaginationParams {
     search: string;
     orderBy: string;
     orderDirection: EnumSort;
+    searchParams: URLSearchParams
 }
 
 export function getPaginationParams(request: Request): PaginationParams {
@@ -24,5 +25,6 @@ export function getPaginationParams(request: Request): PaginationParams {
         orderBy: searchParams.get("orderBy") || "created_at",
         orderDirection:
             (searchParams.get("orderDirection") as EnumSort) || EnumSort.DESC,
+        searchParams
     };
 }

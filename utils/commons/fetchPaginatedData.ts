@@ -20,6 +20,7 @@ interface FetchOptions {
     orderDirection?: EnumSort.ASC | EnumSort.DESC;
     selected?: string;
     filters?: Filter[]; // 👈 added
+    notNull?: string[];
 }
 
 /**
@@ -38,6 +39,7 @@ export async function fetchPaginatedData<T>(
         orderDirection = EnumSort.DESC,
         selected,
         filters = [],
+        notNull=[]
     } = options || {};
 
     const from = (page - 1) * limit;
@@ -57,37 +59,19 @@ export async function fetchPaginatedData<T>(
     }
 
     // 🧩 Apply filters dynamically
-    for (const {column, operator, value} of filters) {
-        if (value === undefined || value === null) continue;
-
-        switch (operator) {
-            case EnumOperator.eq:
-                query = query.eq(column, value);
-                break;
-            case EnumOperator.neq:
-                query = query.neq(column, value);
-                break;
-            case EnumOperator.gt:
-                query = query.gt(column, value);
-                break;
-            case EnumOperator.gte:
-                query = query.gte(column, value);
-                break;
-            case EnumOperator.lt:
-                query = query.lt(column, value);
-                break;
-            case EnumOperator.lte:
-                query = query.lte(column, value);
-                break;
-            case EnumOperator.ilike:
-                query = query.ilike(column, `%${value}%`);
-                break;
-            case EnumOperator.in:
-                if (Array.isArray(value)) {
-                    query = query.in(column, value);
-                }
-                break;
+    // Apply all filters
+    for (const f of filters) {
+        const {column, operator = "eq", value} = f;
+        if (operator === "in" && Array.isArray(value)) {
+            query = query.in(column, value);
+        } else {
+            query = (query as ANY)[operator](column, value);
         }
+    }
+
+    // Filter out null columns
+    for (const col of notNull) {
+        query = query.not(col, "is", null);
     }
 
     const {data, count, error} = await query;

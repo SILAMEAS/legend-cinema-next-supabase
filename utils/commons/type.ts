@@ -32,3 +32,12 @@ export interface IStatus{
     [EnumTableColum.ID]: string|number,
     [EnumTableColum.NAME]: string
 }
+export interface IPagination<T> {
+    contents: T[];
+    page: number;
+    pageSize?: number;
+    totalPages?: number;
+    total?: number;
+    hasNext?: boolean;
+    totalInvalid?: number;
+}

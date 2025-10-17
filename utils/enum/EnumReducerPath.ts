@@ -7,5 +7,6 @@ export enum EnumReducerPath{
     movie="movie",
     offer="offer",
     promotion="promotion",
+    food_and_beverage="food_and_beverage",
 
 }
