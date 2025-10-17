@@ -4,7 +4,7 @@ import {EnumTableName} from "../enum/EnumTable";
 import {createClient} from "@/lib/supabase/client";
 import {_insert} from "@/utils/api/__general";
 import {EnumTableColum} from "@/utils/enum/EnumTableColum";
-import {_tb_profile} from "@/utils/api/supabase_tb/_tb_profile";
+import {type} from "@/redux/services/user/type";
 
 
 /** ------------------------------------------------------ */
@@ -25,7 +25,7 @@ export async function _getProfile(userId: string) {
         if (res.error || userId === null) {
             throw new Error(res.error?.message ?? 'User null')
         }
-        return {...res,data:res.data as unknown as _tb_profile};
+        return {...res,data:res.data as unknown as type};
     } catch (error: unknown) {
         throw error instanceof Error ? (error as ANY).message : "An error occurred";
     }

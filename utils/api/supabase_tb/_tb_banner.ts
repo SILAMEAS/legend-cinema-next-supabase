@@ -1,7 +1,7 @@
-import {_tb_base} from "@/utils/api/supabase_tb/_tb_base";
+import {baseColumn} from "@/utils/api/supabase_tb/BaseColumn";
 import {EnumTableColum} from "@/utils/enum/EnumTableColum";
 
-export interface _tb_banner extends _tb_base {
+export interface _tb_banner extends baseColumn {
     [EnumTableColum.IMAGE]:string,
     [EnumTableColum.ALT]:string
 

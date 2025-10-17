@@ -3,10 +3,11 @@ import Link from "next/link";
 import {Button} from "./ui/button";
 import {LogoutButton} from "./logout-button";
 import {EnumPage} from "@/utils/enum/EnumPage";
-import {useAuth} from "@/context/AuthContext";
 
 export function AuthButton() {
-    const {user} = useAuth();
+    // NEED AUTH
+    // const {user} = useAuth();
+    const user ={email:'las'}
 
   return user ? (
     <div className="flex items-center gap-4">
