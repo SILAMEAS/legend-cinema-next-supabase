@@ -1,5 +1,6 @@
 import {baseColumn} from "@/utils/api/supabase_tb/BaseColumn";
 import {EnumRole} from "@/utils/enum/EnumRole";
+import {Session, User} from "@supabase/auth-js";
 
 export interface type extends baseColumn {
     name: string;
@@ -14,4 +15,9 @@ export interface IUserResponse {
     name: string;
     email: string;
     role:string,
+}
+
+export interface IUserRequest{
+    user: User | null
+    session: Session | null
 }

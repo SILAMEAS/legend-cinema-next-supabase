@@ -6,6 +6,7 @@ import Image from "next/image"
 import Link from "next/link"
 import { useState } from "react"
 import {EnumPage} from "@/utils/enum/EnumPage";
+import {AuthButton} from "@/components/auth-button";
 
 export function Header() {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
@@ -68,6 +69,7 @@ export function Header() {
                                 <span className="text-sm">EN</span>
                                 <ChevronDown className="w-4 h-4" />
                             </button>
+                            <AuthButton/>
                         </div>
                     </div>
 
