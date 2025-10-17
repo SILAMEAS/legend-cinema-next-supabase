@@ -14,8 +14,11 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import React, { useState } from "react";
 import { EnumPage } from "@/utils/enum/EnumPage";
+import {setUser} from "@/redux/slices/counterSlice";
+import {useAppDispatch} from "@/redux/hooks";
+import {useLazyGetUsersQuery} from "@/redux/services/user/user";
 
 export function LoginForm({
   className,
@@ -26,6 +29,8 @@ export function LoginForm({
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
+  const [getUser] =useLazyGetUsersQuery();
+  const dispatch =useAppDispatch();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -39,6 +44,9 @@ export function LoginForm({
         password,
       });
       if (error) throw error;
+
+      await getUser().unwrap().then(user=>dispatch(setUser(user)))
+
       // Update this route to redirect to an authenticated route. The banner already has an active session.
       router.push(EnumPage.ROOT);
     } catch (error: unknown) {

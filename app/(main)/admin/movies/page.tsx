@@ -8,9 +8,8 @@ import {Toast} from "@/components/admin/toast"
 import {EnumPage} from "@/utils/enum/EnumPage";
 import {ANY} from "@/utils/commons/type";
 import Image from "next/image";
-import useFetchData from "@/utils/hooks/useFetchData";
-import {_getMovies} from "@/utils/api/__movie";
 import {EnumTableColum} from "@/utils/enum/EnumTableColum";
+import {useGetMovieQuery} from "@/redux/services/movie/movie";
 
 export default function MoviesManagement() {
     const [searchQuery, setSearchQuery] = useState("")
@@ -20,32 +19,28 @@ export default function MoviesManagement() {
         movieId: null,
         movieTitle: "",
     })
-    const [toast, setToast] = useState<{ show: boolean; message: string; type: "success" | "error" | "warning" } | null>(
+    const [toast, setToast] = useState<{
+        show: boolean;
+        message: string;
+        type: "success" | "error" | "warning"
+    } | null>(
         null,
     )
-    const [editModal, setEditModal] = useState<{ show: boolean; movie: ANY | null }>({ show: false, movie: null })
-    const {data:movies}=useFetchData({
-        fetcher:_getMovies
-    })
-
-    const filteredMovies = movies.filter((movie) => {
-        const matchesSearch = movie.title.toLowerCase().includes(searchQuery.toLowerCase())
-        const matchesStatus = filterStatus === "all" || movie[EnumTableColum.STATUS]?.[EnumTableColum.NAME] === filterStatus
-        return matchesSearch && matchesStatus
-    })
+    const [editModal, setEditModal] = useState<{ show: boolean; movie: ANY | null }>({show: false, movie: null});
+    const {currentData: movies} = useGetMovieQuery({title:searchQuery,status:filterStatus});
 
     const handleDeleteClick = (movieId: number, movieTitle: string) => {
-        setDeleteModal({ show: true, movieId, movieTitle })
+        setDeleteModal({show: true, movieId, movieTitle})
     }
 
     const handleDeleteConfirm = () => {
         // Perform delete operation here
-        setToast({ show: true, message: "Movie deleted successfully!", type: "success" })
-        setDeleteModal({ show: false, movieId: null, movieTitle: "" })
+        setToast({show: true, message: "Movie deleted successfully!", type: "success"})
+        setDeleteModal({show: false, movieId: null, movieTitle: ""})
     }
 
     const handleEditClick = (movie: ANY) => {
-        setEditModal({ show: true, movie })
+        setEditModal({show: true, movie})
     }
 
     return (
@@ -60,7 +55,7 @@ export default function MoviesManagement() {
                     href={EnumPage.ADMIN_MOVIES_NEW}
                     className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors"
                 >
-                    <Plus className="w-5 h-5" />
+                    <Plus className="w-5 h-5"/>
                     Add New Movie
                 </Link>
             </div>
@@ -69,7 +64,7 @@ export default function MoviesManagement() {
             <div className="bg-gray-900 rounded-lg shadow-lg border border-gray-800 p-4">
                 <div className="flex flex-col md:flex-row gap-4">
                     <div className="flex-1 relative">
-                        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 w-5 h-5" />
+                        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 w-5 h-5"/>
                         <input
                             type="text"
                             placeholder="Search movies..."
@@ -92,13 +87,14 @@ export default function MoviesManagement() {
 
             {/* Movies Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                {filteredMovies.map((movie) => (
+                {movies?.contents?.map((movie) => (
                     <div
                         key={movie.id}
                         className="bg-gray-900 rounded-lg shadow-lg border border-gray-800 overflow-hidden hover:border-red-500 transition-colors"
                     >
                         <div className="relative">
-                            <Image fill src={movie[EnumTableColum.IMAGE] || "/placeholder.svg"} alt={movie.title} className="w-full h-64 object-cover" />
+                            <Image fill src={movie[EnumTableColum.IMAGE] || "/placeholder.svg"} alt={movie.title}
+                                   className="w-full h-64 object-cover"/>
                             <span
                                 className={`absolute top-2 right-2 px-2 py-1 text-xs font-semibold rounded-full ${
                                     movie[EnumTableColum.STATUS]?.name === "Now Showing" ? "bg-green-500 text-white" : "bg-blue-500 text-white"
@@ -120,17 +116,18 @@ export default function MoviesManagement() {
                                     onClick={() => handleEditClick(movie)}
                                     className="flex-1 bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded-lg flex items-center justify-center gap-2 transition-colors text-sm"
                                 >
-                                    <Edit className="w-4 h-4" />
+                                    <Edit className="w-4 h-4"/>
                                     Edit
                                 </button>
-                                <button className="bg-gray-800 hover:bg-gray-700 text-gray-300 px-3 py-2 rounded-lg transition-colors border border-gray-700">
-                                    <Eye className="w-4 h-4" />
+                                <button
+                                    className="bg-gray-800 hover:bg-gray-700 text-gray-300 px-3 py-2 rounded-lg transition-colors border border-gray-700">
+                                    <Eye className="w-4 h-4"/>
                                 </button>
                                 <button
                                     onClick={() => handleDeleteClick(movie.id, movie.title)}
                                     className="bg-red-900/30 hover:bg-red-900/50 text-red-500 px-3 py-2 rounded-lg transition-colors border border-red-800"
                                 >
-                                    <Trash2 className="w-4 h-4" />
+                                    <Trash2 className="w-4 h-4"/>
                                 </button>
                             </div>
                         </div>
@@ -139,7 +136,7 @@ export default function MoviesManagement() {
             </div>
 
             {/* Empty State */}
-            {filteredMovies.length === 0 && (
+            {movies?.contents.length === 0 && (
                 <div className="bg-gray-900 rounded-lg shadow-lg border border-gray-800 p-12 text-center">
                     <p className="text-gray-500">No movies found matching your criteria.</p>
                 </div>
@@ -151,13 +148,14 @@ export default function MoviesManagement() {
                     title="Delete Movie"
                     message={`Are you sure you want to delete "${deleteModal.movieTitle}"? This action cannot be undone.`}
                     onConfirm={handleDeleteConfirm}
-                    onCancel={() => setDeleteModal({ show: false, movieId: null, movieTitle: "" })}
+                    onCancel={() => setDeleteModal({show: false, movieId: null, movieTitle: ""})}
                 />
             )}
 
             {/* Edit Modal */}
             {editModal.show && editModal.movie && (
-                <div className="fixed inset-0 bg-black/70 flex items-center justify-center p-4 z-50 backdrop-blur-sm overflow-y-auto">
+                <div
+                    className="fixed inset-0 bg-black/70 flex items-center justify-center p-4 z-50 backdrop-blur-sm overflow-y-auto">
                     <div className="bg-gray-900 rounded-lg shadow-2xl max-w-2xl w-full border border-gray-800 my-8">
                         <div className="p-6 border-b border-gray-800">
                             <h2 className="text-xl font-bold text-white">Edit Movie</h2>
@@ -166,7 +164,8 @@ export default function MoviesManagement() {
                         <form className="p-6 space-y-4">
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-300 mb-2">Movie Title *</label>
+                                    <label className="block text-sm font-medium text-gray-300 mb-2">Movie Title
+                                        *</label>
                                     <input
                                         type="text"
                                         defaultValue={editModal.movie.title}
@@ -218,7 +217,8 @@ export default function MoviesManagement() {
                                 </div>
 
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-300 mb-2">Release Date *</label>
+                                    <label className="block text-sm font-medium text-gray-300 mb-2">Release Date
+                                        *</label>
                                     <input
                                         type="date"
                                         defaultValue={editModal.movie.releaseDate}
@@ -232,8 +232,8 @@ export default function MoviesManagement() {
                                     type="submit"
                                     onClick={(e) => {
                                         e.preventDefault()
-                                        setToast({ show: true, message: "Movie updated successfully!", type: "success" })
-                                        setEditModal({ show: false, movie: null })
+                                        setToast({show: true, message: "Movie updated successfully!", type: "success"})
+                                        setEditModal({show: false, movie: null})
                                     }}
                                     className="bg-red-600 hover:bg-red-700 text-white px-6 py-2.5 rounded-lg font-medium transition-colors"
                                 >
@@ -241,7 +241,7 @@ export default function MoviesManagement() {
                                 </button>
                                 <button
                                     type="button"
-                                    onClick={() => setEditModal({ show: false, movie: null })}
+                                    onClick={() => setEditModal({show: false, movie: null})}
                                     className="bg-gray-800 hover:bg-gray-700 text-white px-6 py-2.5 rounded-lg font-medium transition-colors border border-gray-700"
                                 >
                                     Cancel
@@ -255,7 +255,7 @@ export default function MoviesManagement() {
             {/* Toast Notification */}
             {toast?.show && (
                 <div className="fixed bottom-4 right-4 z-50">
-                    <Toast message={toast.message} type={toast.type} onClose={() => setToast(null)} />
+                    <Toast message={toast.message} type={toast.type} onClose={() => setToast(null)}/>
                 </div>
             )}
         </div>

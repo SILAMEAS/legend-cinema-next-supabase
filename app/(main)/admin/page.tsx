@@ -1,9 +1,6 @@
 "use client"
 import {DollarSign, Film, MapPin, Tag, TrendingUp, Users, UtensilsCrossed} from "lucide-react"
-import useFetchDataObject from "@/utils/hooks/useFetchDataObject";
-import {_getDashboard} from "@/utils/api/__dashboard";
-import {_tb_dashboard} from "@/utils/api/supabase_tb/_tb_dashboard";
-import {getMoviesClient} from "@/utils/api/__general";
+import {useGetDashboardQuery} from "@/redux/services/dashboard/dashboard";
 
 export default function AdminDashboard() {
     const stats = [
@@ -57,21 +54,11 @@ export default function AdminDashboard() {
         {title: "Smile 2", status: "Coming Soon", bookings: 0},
         {title: "Joker: Folie à Deux", status: "Now Showing", bookings: 567},
     ]
-
-    const {data} = useFetchDataObject<_tb_dashboard>({
-        fetcher: _getDashboard
-    })
-    console.log("data", data);
-
-
-    const FetchPagination = async () => {
-        const res = await getMoviesClient({page: 1, limit: 5});
-        console.table(res.data);
-    }
+    const {currentData}=useGetDashboardQuery();
+    console.log(currentData);
 
     return (
         <div className="space-y-8">
-            <button onClick={FetchPagination}>Fetch</button>
             {/* Stats Grid - Updated to dark mode */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {stats.map((stat, index) => (

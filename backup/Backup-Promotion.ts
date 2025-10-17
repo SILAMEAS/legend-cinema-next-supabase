@@ -1,6 +1,6 @@
-import {_tb_promotion} from "@/utils/api/supabase_tb/_tb_promotion";
+import {IPromotionResponse} from "@/redux/services/promotion/type";
 
-export const BackupPromotion: Array<_tb_promotion> = [
+export const BackupPromotion: Array<IPromotionResponse> = [
     {
         id: 1,
         title: "Khmer New Year Combo",

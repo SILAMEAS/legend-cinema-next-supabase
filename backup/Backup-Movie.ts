@@ -1,6 +1,6 @@
-import {_tb_movie} from "@/utils/api/supabase_tb/_tb_movie";
+import {IMovieResponse} from "@/redux/services/movie/type";
 
-export const BackupMovie:Array<_tb_movie> = [
+export const BackupMovie: Array<IMovieResponse> = [
     {
         id: 1,
         title: "Venom: The Last Dance",

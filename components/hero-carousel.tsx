@@ -3,39 +3,37 @@
 import {useEffect, useState} from "react"
 import Image from "next/image"
 import {ChevronLeft, ChevronRight} from "lucide-react"
-import useFetchData from "@/utils/hooks/useFetchData";
-import {_getBanners} from "@/utils/api/__banner";
+import {useGetBannerQuery} from "@/redux/services/banner/banner";
 
 
 export function HeroCarousel() {
-    const {data: slides} = useFetchData({
-        fetcher: _getBanners
-    })
+
+    const {currentData: slides} = useGetBannerQuery();
     const [currentSlide, setCurrentSlide] = useState(0)
 
     useEffect(() => {
         const timer = setInterval(() => {
-            setCurrentSlide((prev) => (prev + 1) % slides.length)
+            setCurrentSlide((prev) => (prev + 1) % (slides?.contents?.length??1))
         }, 5000)
 
         return () => clearInterval(timer)
-    }, [slides.length])
+    }, [slides?.contents?.length])
 
     const nextSlide = () => {
-        setCurrentSlide((prev) => (prev + 1) % slides.length)
+        setCurrentSlide((prev) => (prev + 1) % (slides?.contents?.length??1))
     }
 
     const prevSlide = () => {
-        setCurrentSlide((prev) => (prev - 1 + slides.length) % slides.length)
+        setCurrentSlide((prev) => (prev - 1 + (slides?.contents?.length??1)) % (slides?.contents?.length??1))
     }
 
     return (
         <section className="relative w-full h-[250px] sm:h-[350px] md:h-[450px] lg:h-[500px] overflow-hidden bg-black">
             {/* Slides */}
             <div className="relative w-full h-full">
-                {slides.map((slide, index) => (
+                {slides?.contents?.map((slide, index) => (
                     <div
-                        key={slide.id+slide.alt}
+                        key={slide.id + slide.alt}
                         className={`absolute inset-0 transition-opacity duration-700 ${
                             index === currentSlide ? "opacity-100" : "opacity-0"
                         }`}
@@ -70,7 +68,7 @@ export function HeroCarousel() {
 
             {/* Slide Indicators */}
             <div className="absolute bottom-3 md:bottom-6 left-1/2 -translate-x-1/2 flex gap-1.5 md:gap-2 z-20">
-                {slides.map((_, index) => (
+                {slides?.contents?.map((_, index) => (
                     <button
                         key={index}
                         onClick={() => setCurrentSlide(index)}

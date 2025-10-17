@@ -1,6 +1,6 @@
-import {_tb_banner} from "@/utils/api/supabase_tb/_tb_banner";
+import {IBannerResponse} from "@/redux/services/banner/type";
 
-export const BackupBanners: Array<_tb_banner> = [
+export const BackupBanners: Array<IBannerResponse> = [
     {
         id: 1,
         image: "https://coolbeans.sgp1.digitaloceanspaces.com/legend-cinema-prod/e4996ca9-03d4-4a65-8374-10ee99c5be23.jpeg",

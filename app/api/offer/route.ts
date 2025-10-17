@@ -1,21 +1,20 @@
 import {EnumTableName} from "@/utils/enum/EnumTable";
 import {getPaginationParams} from "@/utils/commons/getPaginationParams";
 import {fetchPaginatedData} from "@/utils/commons/fetchPaginatedData";
-import {EnumSort} from "@/utils/enum/EnumSort";
 
 
 export async function GET(request: Request) {
     try {
-        const {page, limit, search} =
+        const {page, limit, search, orderBy, orderDirection} =
             getPaginationParams(request);
 
-        const result = await fetchPaginatedData(EnumTableName.Category, {
+        const result = await fetchPaginatedData(EnumTableName.Offer, {
             page,
             limit,
             searchColumn: "name",
             searchValue: search,
-            orderBy:'id',
-            orderDirection:EnumSort.ASC,
+            orderBy,
+            orderDirection,
         });
         return Response.json(result);
     } catch (error) {

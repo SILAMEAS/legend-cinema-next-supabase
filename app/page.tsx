@@ -4,9 +4,8 @@ import {Footer} from "@/components/footer"
 import {HeroCarousel} from "@/components/hero-carousel"
 import {MovieCard} from "@/components/movie-card"
 import {PromoCard} from "@/components/promo-card"
-import {_getMovies} from "@/utils/api/__movie";
-import {_getPromotions} from "@/utils/api/__promotion";
-import useFetchData from "@/utils/hooks/useFetchData";
+import {useGetMovieQuery} from "@/redux/services/movie/movie";
+import {useGetPromotionQuery} from "@/redux/services/promotion/promotion";
 
 export default function Home() {
     const dates = [
@@ -16,14 +15,8 @@ export default function Home() {
         {day: "Mon", date: "13", month: "Oct"},
         {day: "Tue", date: "14", month: "Oct"},
     ];
-    const {data: movies} = useFetchData({
-        fetcher: () => _getMovies().then(res => ({
-            data: res.data,
-        })),
-    })
-    const {data: promotion} = useFetchData({
-        fetcher: _getPromotions
-    })
+    const {currentData: movies} = useGetMovieQuery({});
+    const {currentData: promotion}=useGetPromotionQuery();
     return (
         <div className="min-h-screen bg-black text-white">
             <Header/>
@@ -57,7 +50,7 @@ export default function Home() {
 
                     <div
                         className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 md:gap-6">
-                        {movies?.map((movie) => (
+                        {movies?.contents?.map((movie) => (
                             <MovieCard
                                 key={movie.id}
                                 title={movie.title}
@@ -77,7 +70,7 @@ export default function Home() {
                     <h2 className="text-2xl md:text-3xl font-bold mb-6 md:mb-8">What is new?</h2>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
-                        {promotion?.map((promo) => (
+                        {promotion?.contents?.map((promo) => (
                             <PromoCard key={promo.id} title={promo.title} image={promo.image}/>
                         ))}
                     </div>

@@ -13,7 +13,7 @@ const counterSlice = createSlice({
     name: 'counter',
     initialState,
     reducers: {
-        setUser: (state, action: PayloadAction<IUserResponse>) => {
+        setUser: (state, action: PayloadAction<IUserResponse|null>) => {
             state.user= action.payload;
         },
     },

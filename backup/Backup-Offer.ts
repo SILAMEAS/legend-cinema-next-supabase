@@ -1,6 +1,6 @@
-import {_tb_offer} from "@/utils/api/supabase_tb/_tb_offer";
+import {IOfferResponse} from "@/redux/services/offer/type";
 
-export const BackupOffer: Array<_tb_offer> = [
+export const BackupOffer: Array<IOfferResponse> = [
     {
         id: 1,
         title: "Student Discount",

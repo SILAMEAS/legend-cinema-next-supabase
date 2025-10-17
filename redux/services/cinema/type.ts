@@ -1,4 +1,4 @@
-import {baseColumn} from "@/utils/api/supabase_tb/BaseColumn";
+import {baseColumn} from "@/utils/BaseColumn";
 import {EnumTableColum} from "@/utils/enum/EnumTableColum";
 
 export interface ICinemaResponse extends baseColumn{

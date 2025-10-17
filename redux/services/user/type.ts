@@ -1,4 +1,4 @@
-import {baseColumn} from "@/utils/api/supabase_tb/BaseColumn";
+import {baseColumn} from "@/utils/BaseColumn";
 import {EnumRole} from "@/utils/enum/EnumRole";
 import {Session, User} from "@supabase/auth-js";
 
