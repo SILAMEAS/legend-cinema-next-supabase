@@ -4,13 +4,13 @@ import {EnumPropertyKey} from "@/utils/enum/EnumPropertyKey";
 import {ANY} from "@/utils/commons/type";
 
 /**
- * Retrieves the current user's profile from Supabase
+ * Retrieves the current banner's profile from Supabase
  * using the session's JWT claims.
  */
 export async function getSupabaseProfile() {
     const supabase = await createClient();
 
-    // Get JWT claims to identify the user
+    // Get JWT claims to identify the banner
     const {data: claimsData, error: claimsError} = await supabase.auth.getClaims();
     if (claimsError || !claimsData?.claims?.sub) {
         console.error("❌ Failed to get claims:", claimsError);
@@ -19,7 +19,7 @@ export async function getSupabaseProfile() {
 
     const userId = claimsData.claims.sub;
 
-    // Query the Profile table for this user
+    // Query the Profile table for this banner
     const {data: profile, error: profileError} = await supabase
         .from(EnumTableName.Profile)
         .select("id,name,user_id,email,role:Role(name)")

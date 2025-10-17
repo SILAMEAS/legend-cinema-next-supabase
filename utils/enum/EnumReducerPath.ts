@@ -1,3 +1,11 @@
 export enum EnumReducerPath{
-    user="user"
+    user="user",
+    banner="banner",
+    category="category",
+    cinema="cinema",
+    dashboard="dashboard",
+    movie="movie",
+    offer="offer",
+    promotion="promotion",
+
 }

@@ -11,7 +11,7 @@ export const user = createApi({
     tagTypes: ["user"],
     endpoints: (builder) => ({
         getUsers: builder.query<ANY, void>({
-            query: () => '/user',
+            query: () => '/banner',
             providesTags: ['user']
         }),
         createUser: builder.mutation<ANY, IUserRequest>({

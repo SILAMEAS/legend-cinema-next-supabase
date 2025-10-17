@@ -74,7 +74,7 @@ export function SignUpUserSteps() {
           </Link>
         </TutorialStep>
       ) : null}
-      <TutorialStep title="Sign up your first user">
+      <TutorialStep title="Sign up your first banner">
         <p>
           Head over to the{" "}
           <Link
@@ -83,7 +83,7 @@ export function SignUpUserSteps() {
           >
             Sign up
           </Link>{" "}
-          page and sign up your first user. It&apos;s okay if this is just you
+          page and sign up your first banner. It&apos;s okay if this is just you
           for now. Your awesome idea will have plenty of users later!
         </p>
       </TutorialStep>

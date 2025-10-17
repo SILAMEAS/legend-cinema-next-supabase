@@ -1,14 +1,37 @@
-import { configureStore } from '@reduxjs/toolkit';
+import {configureStore} from '@reduxjs/toolkit';
 import counterReducer from './slices/counterSlice';
 import {user} from "@/redux/services/user/user";
+import {banner} from "@/redux/services/banner/banner";
+import {movie} from "@/redux/services/movie/movie";
+import {cinema} from "@/redux/services/cinema/cinema";
+import {offer} from "@/redux/services/offer/offer";
+import {category} from "@/redux/services/category/category";
+import {promotion} from "@/redux/services/promotion/promotion";
+import {dashboard} from "@/redux/services/dashboard/dashboard";
 
 export const store = configureStore({
     reducer: {
         counter: counterReducer,
         [user.reducerPath]: user.reducer,
+        [banner.reducerPath]: banner.reducer,
+        [movie.reducerPath]: movie.reducer,
+        [cinema.reducerPath]: cinema.reducer,
+        [category.reducerPath]: category.reducer,
+        [offer.reducerPath]: offer.reducer,
+        [dashboard.reducerPath]: dashboard.reducer,
+        [promotion.reducerPath]: promotion.reducer,
     },
     middleware: (getDefaultMiddleware) =>
-        getDefaultMiddleware().concat(user.middleware),
+        getDefaultMiddleware().concat(
+            user.middleware,
+            banner.middleware,
+            movie.middleware,
+            offer.middleware,
+            category.middleware,
+            cinema.middleware,
+            dashboard.middleware,
+            promotion.middleware
+        ),
 });
 
 // ✅ Typed hooks and types
