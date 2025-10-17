@@ -131,106 +131,44 @@ export async function _update<T>({tableName, key, value, newData, select}: {
         throw error instanceof Error ? (error as ANY).message : "An error occurred";
     }
 }
+
 /** ------------------------------------------------------ */
 
 /** ---------------      Gets As Pagination    ----------------- */
 
 /** ------------------------------------------------------ */
-export async function _getsAsPagination<T>({
-                                   tableName,
-                                   select = "*",
-                                   filters = [],
-                                   notNull = [],
-                                   page = 1,
-                                   limit = 10,
-                                   orderBy,
-                                   ascending = true,
-                                   search,
-                                   searchColumns = [],
-                               }: {
-    tableName: EnumTableName;
-    select?: string;
-    filters?: Array<typeFilters>;
-    notNull?: string[];
+
+export async function getMoviesClient({
+                                          page = 1,
+                                          limit = 10,
+                                          search = "",
+                                          orderBy = "created_at",
+                                          orderDirection = "desc",
+                                      }: {
     page?: number;
     limit?: number;
+    search?: string;
     orderBy?: string;
-    ascending?: boolean;
-    search?: string;            // search keyword
-    searchColumns?: string[];   // columns to apply search
+    orderDirection?: "asc" | "desc";
 }) {
     const supabase = createClient();
-    let loading = true;
-    let error: string | null = null;
+    const from = (page - 1) * limit;
+    const to = from + limit - 1;
 
-    try {
-        // 1️⃣ Pagination range
-        const from = (page - 1) * limit;
-        const to = from + limit - 1;
+    let query = supabase
+        .from("Movie")
+        .select("*", { count: "exact" });
 
-        // 2️⃣ Base query
-        let query = supabase
-            .from(tableName)
-            .select(select, {count: "exact"})
-            .range(from, to);
+    if (search) query = query.ilike("title", `%${search}%`);
 
-        // 3️⃣ Apply filters
-        for (const f of filters) {
-            const {column, operator = "eq", value} = f;
-            if (operator === "in" && Array.isArray(value)) {
-                query = query.in(column, value);
-            } else {
-                query = (query as ANY)[operator](column, value);
-            }
-        }
+    query = query.range(from, to);
+    query = query.order(orderBy, { ascending: orderDirection === "asc" });
 
-        // 4️⃣ Exclude null columns
-        for (const col of notNull) {
-            query = query.not(col, "is", null);
-        }
+    const { data, count, error } = await query;
+    if (error) throw error;
 
-        // 5️⃣ Search (case-insensitive match on one or more columns)
-        if (search && searchColumns.length > 0) {
-            query = query.or(
-                searchColumns
-                    .map((col) => `${col}.ilike.%${search}%`)
-                    .join(",")
-            );
-        }
+    const totalPages = count ? Math.ceil(count / limit) : 0;
+    const totalBookings = data?.reduce((sum, m) => sum + (m.Booking ?? 0), 0) ?? 0;
 
-        // 6️⃣ Ordering
-        if (orderBy) {
-            query = query.order(orderBy, {ascending});
-        }
-
-        // 7️⃣ Execute
-        const res = await query;
-        if (res.error) throw res.error;
-
-        loading = false;
-
-        // 8️⃣ Return consistent structure
-        return {
-            data: res.data as T[],
-            totalCount: res.count ?? 0,
-            totalPages: Math.ceil((res.count ?? 0) / limit),
-            currentPage: page,
-            perPage: limit,
-            loading,
-            error,
-        };
-    } catch (err: any) {
-        loading = false;
-        error = err.message ?? "An error occurred";
-
-        return {
-            data: [] as T[],
-            totalCount: 0,
-            totalPages: 0,
-            currentPage: page,
-            perPage: limit,
-            loading,
-            error,
-        };
-    }
+    return { data, total: count ?? 0, totalBookings, page, limit, totalPages };
 }

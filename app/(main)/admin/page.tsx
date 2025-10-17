@@ -3,6 +3,7 @@ import {DollarSign, Film, MapPin, Tag, TrendingUp, Users, UtensilsCrossed} from 
 import useFetchDataObject from "@/utils/hooks/useFetchDataObject";
 import {_getDashboard} from "@/utils/api/__dashboard";
 import {_tb_dashboard} from "@/utils/api/supabase_tb/_tb_dashboard";
+import {getMoviesClient} from "@/utils/api/__general";
 
 export default function AdminDashboard() {
     const stats = [
@@ -62,8 +63,15 @@ export default function AdminDashboard() {
     })
     console.log("data", data);
 
+
+    const FetchPagination = async () => {
+        const res = await getMoviesClient({page: 1, limit: 5});
+        console.table(res.data);
+    }
+
     return (
         <div className="space-y-8">
+            <button onClick={FetchPagination}>Fetch</button>
             {/* Stats Grid - Updated to dark mode */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {stats.map((stat, index) => (
