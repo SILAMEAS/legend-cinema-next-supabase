@@ -1,6 +1,7 @@
-import { createClient } from "@/lib/supabase/server";
-import { EnumTableName } from "@/utils/enum/EnumTable";
-import { EnumPropertyKey } from "@/utils/enum/EnumPropertyKey";
+import {createClient} from "@/lib/supabase/server";
+import {EnumTableName} from "@/utils/enum/EnumTable";
+import {EnumPropertyKey} from "@/utils/enum/EnumPropertyKey";
+import {ANY} from "@/utils/commons/type";
 
 /**
  * Retrieves the current user's profile from Supabase
@@ -10,7 +11,7 @@ export async function getSupabaseProfile() {
     const supabase = await createClient();
 
     // Get JWT claims to identify the user
-    const { data: claimsData, error: claimsError } = await supabase.auth.getClaims();
+    const {data: claimsData, error: claimsError} = await supabase.auth.getClaims();
     if (claimsError || !claimsData?.claims?.sub) {
         console.error("❌ Failed to get claims:", claimsError);
         return null;
@@ -19,18 +20,25 @@ export async function getSupabaseProfile() {
     const userId = claimsData.claims.sub;
 
     // Query the Profile table for this user
-    const { data: profile, error: profileError } = await supabase
+    const {data: profile, error: profileError} = await supabase
         .from(EnumTableName.Profile)
-        .select("*")
+        .select("id,name,user_id,email,role:Role(name)")
         .eq(EnumPropertyKey.user_id, userId)
-        .single();
+        .single().then(res => {
+            return {
+                ...res, data: {
+                    ...res.data,
+                    role: (res.data?.role as ANY).name
+                }
+            }
+        });
 
     if (profileError) {
         console.error("❌ Error fetching profile:", profileError);
         return null;
     }
     if (!profile) {
-        return Response.json({ message: "Unauthorized or no profile found" }, { status: 401 });
+        return Response.json({message: "Unauthorized or no profile found"}, {status: 401});
     }
     return profile;
 }

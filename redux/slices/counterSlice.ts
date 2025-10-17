@@ -1,28 +1,23 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import {IUserResponse} from "@/redux/services/user/type";
 
 interface CounterState {
-    value: number;
+    user:IUserResponse|null
 }
 
 const initialState: CounterState = {
-    value: 0,
+    user:null
 };
 
 const counterSlice = createSlice({
     name: 'counter',
     initialState,
     reducers: {
-        increment: (state) => {
-            state.value += 1;
-        },
-        decrement: (state) => {
-            state.value -= 1;
-        },
-        set: (state, action: PayloadAction<number>) => {
-            state.value = action.payload;
+        setUser: (state, action: PayloadAction<IUserResponse>) => {
+            state.user= action.payload;
         },
     },
 });
 
-export const { increment, decrement, set } = counterSlice.actions;
+export const { setUser} = counterSlice.actions;
 export default counterSlice.reducer;

@@ -9,12 +9,9 @@ export interface type extends baseColumn {
         name: EnumRole
     };
 }
-// export interface IUser extends baseColumn{
-//     id:string,
-//     name: string;
-//     email: string;
-//     role: {
-//         id: number,
-//         name: EnumRole
-//     };
-// }
+export interface IUserResponse {
+    id:string,
+    name: string;
+    email: string;
+    role:string,
+}

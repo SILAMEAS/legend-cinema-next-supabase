@@ -1,6 +1,6 @@
 import {EnumTableName} from "@/utils/enum/EnumTable";
-import {getPaginationParams} from "@/app/api/utils/getPaginationParams";
-import {fetchPaginatedData} from "@/app/api/utils/fetchPaginatedData";
+import {getPaginationParams} from "@/utils/commons/getPaginationParams";
+import {fetchPaginatedData} from "@/utils/commons/fetchPaginatedData";
 import {EnumOperator} from "@/utils/enum/EnumOperator";
 
 

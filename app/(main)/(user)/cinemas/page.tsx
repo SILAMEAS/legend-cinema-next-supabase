@@ -6,19 +6,11 @@ import {_getsCinema} from "@/utils/api/__cinema";
 import useFetchData from "@/utils/hooks/useFetchData";
 import {_tb_cinema} from "@/utils/api/supabase_tb/_tb_cinema";
 import Loading from "@/app/loading";
-import {useEffect} from "react";
 
 export default function CinemasPage() {
     const {data: cinemas, loading} = useFetchData<_tb_cinema>({
         fetcher: _getsCinema,
     });
-    useEffect(() => {
-        const FetchTest=async (): Promise<void> => {
-            const res = await fetch("/api/test");
-            console.log(res);
-        }
-        FetchTest().then(r => r)
-    }, []);
     return (
         <div className="min-h-screen bg-black text-white">
             <Header/>
