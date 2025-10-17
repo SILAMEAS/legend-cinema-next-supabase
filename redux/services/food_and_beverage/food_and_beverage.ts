@@ -1,7 +1,7 @@
 import {createApi, fetchBaseQuery} from '@reduxjs/toolkit/query/react';
 import {EnumBaseUrl} from "@/utils/enum/EnumBaseUrl";
 import {EnumReducerPath} from "@/utils/enum/EnumReducerPath";
-import {ANY, IPagination} from "@/utils/commons/type";
+import {IPagination} from "@/utils/commons/type";
 import {EnumMethod} from "@/utils/enum/EnumMethod";
 import {IFoodAndBeverageResponse} from "@/redux/services/food_and_beverage/type";
 

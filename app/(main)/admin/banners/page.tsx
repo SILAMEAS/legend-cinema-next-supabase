@@ -1,39 +1,24 @@
 "use client"
 
-import { useState } from "react"
-import { Plus, Edit, Trash2, MoveUp, MoveDown, Eye, EyeOff, Upload } from "lucide-react"
-import { DeleteConfirmationModal } from "@/components/admin/delete-confirmation-modal"
-import { Toast } from "@/components/admin/toast"
+import {useEffect, useState} from "react"
+import {Edit, Eye, EyeOff, MoveDown, MoveUp, Plus, Trash2, Upload} from "lucide-react"
+import {DeleteConfirmationModal} from "@/components/admin/delete-confirmation-modal"
+import {Toast} from "@/components/admin/toast"
 import {ANY} from "@/utils/commons/type";
 import Image from "next/image";
+import {useGetBannerQuery, useUpdateBannerMutation} from "@/redux/services/banner/banner";
+import {IBannerResponse} from "@/redux/services/banner/type";
+import {EnumTableColum} from "@/utils/enum/EnumTableColum";
 
 export default function BannersManagement() {
-    const [banners, setBanners] = useState([
-        {
-            id: 1,
-            title: "Gold Class Package",
-            image: "/gold-class-banner.jpg",
-            link: "/offers/gold-class",
-            active: true,
-            order: 1,
-        },
-        {
-            id: 2,
-            title: "Student Discount",
-            image: "/student-discount-banner.jpg",
-            link: "/offers/student",
-            active: true,
-            order: 2,
-        },
-        {
-            id: 3,
-            title: "Weekend Special",
-            image: "/weekend-special-banner.jpg",
-            link: "/offers/weekend",
-            active: false,
-            order: 3,
-        },
-    ])
+    const {currentData}=useGetBannerQuery();
+    const [banners, setBanners] = useState<Array<IBannerResponse>>([]);
+    const [updateBanners] = useUpdateBannerMutation();
+    useEffect(() => {
+        if( currentData?.contents){
+            setBanners(currentData?.contents)
+        }
+    },[currentData])
 
     const [showAddModal, setShowAddModal] = useState(false)
     const [deleteModal, setDeleteModal] = useState<{ show: boolean; bannerId: number | null; bannerTitle: string }>({
@@ -44,11 +29,11 @@ export default function BannersManagement() {
     const [toast, setToast] = useState<{ show: boolean; message: string; type: "success" | "error" | "warning" } | null>(
         null,
     )
-    const [editModal, setEditModal] = useState<{ show: boolean; banner: ANY | null }>({ show: false, banner: null })
+    const [editModal, setEditModal] = useState<{ show: boolean; banner: IBannerResponse | null }>({ show: false, banner: null })
 
-    const toggleActive = (id: number) => {
-        setBanners(banners.map((banner) => (banner.id === id ? { ...banner, active: !banner.active } : banner)))
-    }
+    // const toggleActive = (id: number) => {
+    //     setBanners(banners.map((banner) => (banner.id === id ? { ...banner, active: !banner.active } : banner)))
+    // }
 
     const moveUp = (id: number) => {
         const index = banners.findIndex((b) => b.id === id)
@@ -111,7 +96,7 @@ export default function BannersManagement() {
                             <div className="md:w-1/3 relative">
                                 <Image
                                     src={banner.image || "/placeholder.svg?height=200&width=400"}
-                                    alt={banner.title}
+                                    alt={banner.alt}
                                     fill
                                     className="w-full h-48 md:h-full object-cover"
                                 />
@@ -126,7 +111,7 @@ export default function BannersManagement() {
                             <div className="flex-1 p-6">
                                 <div className="flex items-start justify-between mb-4">
                                     <div>
-                                        <h3 className="text-lg font-semibold text-white">{banner.title}</h3>
+                                        <h3 className="text-lg font-semibold text-white">{banner[EnumTableColum.ALT]}</h3>
                                         <p className="text-sm text-gray-400 mt-1">Link: {banner.link}</p>
                                         <p className="text-sm text-gray-400">Order: #{banner.order}</p>
                                     </div>
@@ -142,8 +127,15 @@ export default function BannersManagement() {
                                 {/* Actions */}
                                 <div className="flex flex-wrap gap-2">
                                     <button
-                                        onClick={() => {
-                                            toggleActive(banner.id)
+                                        onClick={ async () => {
+                                            // toggleActive(banner.id)
+                                            await updateBanners({
+                                                id: banner.id,
+                                                data:{
+                                                    ...banner,
+                                                    active: !banner.active
+                                                }
+                                            }).unwrap();
                                             setToast({
                                                 show: true,
                                                 message: `Banner ${banner.active ? "deactivated" : "activated"} successfully!`,
@@ -165,7 +157,16 @@ export default function BannersManagement() {
                                     </button>
 
                                     <button
-                                        onClick={() => moveUp(banner.id)}
+                                        onClick={async () => {
+                                            await updateBanners({
+                                                id: banner.id,
+                                                data:{
+                                                    ...banner,
+                                                    order:banner.order-1,
+                                                }
+                                            })
+                                            moveUp(banner.id)
+                                        }}
                                         disabled={index === 0}
                                         className="bg-gray-200 hover:bg-gray-300 text-gray-700 px-3 py-2 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                                     >
@@ -173,7 +174,16 @@ export default function BannersManagement() {
                                     </button>
 
                                     <button
-                                        onClick={() => moveDown(banner.id)}
+                                        onClick={async () =>{
+                                            await updateBanners({
+                                                id: banner.id,
+                                                data:{
+                                                    ...banner,
+                                                    order:banner.order+1,
+                                                }
+                                            })
+                                            moveDown(banner.id)
+                                        }}
                                         disabled={index === banners.length - 1}
                                         className="bg-gray-200 hover:bg-gray-300 text-gray-700 px-3 py-2 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                                     >
@@ -181,7 +191,7 @@ export default function BannersManagement() {
                                     </button>
 
                                     <button
-                                        onClick={() => handleDeleteClick(banner.id, banner.title)}
+                                        onClick={() => handleDeleteClick(banner.id, banner[EnumTableColum.ALT])}
                                         className="bg-red-900/30 hover:bg-red-900/50 text-red-500 px-3 py-2 rounded-lg flex items-center gap-2 transition-colors text-sm ml-auto border border-red-800"
                                     >
                                         <Trash2 className="w-4 h-4" />
@@ -279,8 +289,19 @@ export default function BannersManagement() {
                                 <label className="block text-sm font-medium text-gray-300 mb-2">Banner Title *</label>
                                 <input
                                     type="text"
-                                    defaultValue={editModal.banner.title}
+                                    defaultValue={editModal.banner[EnumTableColum.ALT]}
                                     className="w-full px-4 py-2 bg-gray-800 border border-gray-700 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
+                                    onChange={(e) => {
+                                        console.log(e.target.value);
+                                        console.log(editModal.banner);
+                                        setEditModal({
+                                            ...editModal,
+                                            banner:{
+                                                ...editModal.banner,
+                                                alt:e.target.value
+                                            }
+                                        } as typeof editModal);
+                                    }}
                                 />
                             </div>
 
@@ -296,8 +317,15 @@ export default function BannersManagement() {
                             <div className="flex gap-3 pt-4">
                                 <button
                                     type="submit"
-                                    onClick={(e) => {
-                                        e.preventDefault()
+                                    onClick={async (e) => {
+                                        e.preventDefault();
+                                        console.info(editModal.banner)
+                                        if(editModal.banner) {
+                                            await updateBanners({
+                                                id:editModal.banner.id,
+                                                data:editModal.banner
+                                            }).unwrap();
+                                        }
                                         setToast({ show: true, message: "Banner updated successfully!", type: "success" })
                                         setEditModal({ show: false, banner: null })
                                     }}

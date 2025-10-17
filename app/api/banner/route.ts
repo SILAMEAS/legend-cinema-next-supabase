@@ -1,11 +1,12 @@
 import {EnumTableName} from "@/utils/enum/EnumTable";
 import {getPaginationParams} from "@/utils/commons/getPaginationParams";
 import {fetchPaginatedData} from "@/utils/commons/fetchPaginatedData";
+import {EnumSort} from "@/utils/enum/EnumSort";
 
 
 export async function GET(request: Request) {
     try {
-        const {page, limit, search, orderBy, orderDirection} =
+        const {page, limit, search} =
             getPaginationParams(request);
 
         const result = await fetchPaginatedData(EnumTableName.Banner, {
@@ -13,8 +14,8 @@ export async function GET(request: Request) {
             limit,
             searchColumn: "name",
             searchValue: search,
-            orderBy,
-            orderDirection,
+            orderBy:"order",
+            orderDirection:EnumSort.ASC,
         });
         return Response.json(result);
     } catch (error) {

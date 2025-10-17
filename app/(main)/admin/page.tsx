@@ -1,67 +1,43 @@
 "use client"
 import {DollarSign, Film, MapPin, Tag, TrendingUp, Users, UtensilsCrossed} from "lucide-react"
 import {useGetDashboardQuery} from "@/redux/services/dashboard/dashboard";
+import {EnumIconRenderStat} from "@/utils/enum/EnumIconRenderStat";
+import {useGetRecentMovieQuery} from "@/redux/services/movie/movie";
 
 export default function AdminDashboard() {
-    const stats = [
-        {
-            title: "Total Movies",
-            value: "24",
-            change: "+3 this week",
-            icon: Film,
-            color: "bg-blue-500",
-        },
-        {
-            title: "Active Cinemas",
-            value: "8",
-            change: "All operational",
-            icon: MapPin,
-            color: "bg-green-500",
-        },
-        {
-            title: "Active Offers",
-            value: "12",
-            change: "4 expiring soon",
-            icon: Tag,
-            color: "bg-purple-500",
-        },
-        {
-            title: "Today's Revenue",
-            value: "$12,450",
-            change: "+15% vs yesterday",
-            icon: DollarSign,
-            color: "bg-yellow-500",
-        },
-        {
-            title: "Total Bookings",
-            value: "1,234",
-            change: "+8% this week",
-            icon: TrendingUp,
-            color: "bg-red-500",
-        },
-        {
-            title: "Active Users",
-            value: "8,456",
-            change: "+234 new users",
-            icon: Users,
-            color: "bg-indigo-500",
-        },
-    ]
-
     const recentMovies = [
         {title: "Venom: The Last Dance", status: "Now Showing", bookings: 456},
         {title: "Terrifier 3", status: "Now Showing", bookings: 389},
         {title: "Smile 2", status: "Coming Soon", bookings: 0},
         {title: "Joker: Folie à Deux", status: "Now Showing", bookings: 567},
     ]
-    const {currentData}=useGetDashboardQuery();
-    console.log(currentData);
+     useGetRecentMovieQuery();
+    const {currentData:stats}=useGetDashboardQuery();
+
+    const IconRender=({key}:{key:EnumIconRenderStat})=>{
+        switch (key){
+            case EnumIconRenderStat.DollarSign:
+                return <DollarSign className="w-6 h-6 text-white"/>
+            case EnumIconRenderStat.Tag:
+                return <Tag className="w-6 h-6 text-white"/>
+            case EnumIconRenderStat.MapPin:
+                return <MapPin className="w-6 h-6 text-white"/>
+            case EnumIconRenderStat.Users:
+                return <Users className="w-6 h-6 text-white"/>
+            case EnumIconRenderStat.TrendingUp:
+                return <TrendingUp className="w-6 h-6 text-white"/>
+            case EnumIconRenderStat.Film:
+                return <Film className="w-6 h-6 text-white"/>
+            default:
+                return <></>
+        }
+    }
 
     return (
         <div className="space-y-8">
             {/* Stats Grid - Updated to dark mode */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {stats.map((stat, index) => (
+                {stats?.contents?.map((stat, index) => (
                     <div key={index} className="bg-gray-900 rounded-lg shadow-lg p-6 border border-gray-800">
                         <div className="flex items-center justify-between">
                             <div>
@@ -70,7 +46,7 @@ export default function AdminDashboard() {
                                 <p className="text-sm text-gray-500 mt-2">{stat.change}</p>
                             </div>
                             <div className={`${stat.color} w-12 h-12 rounded-lg flex items-center justify-center`}>
-                                <stat.icon className="w-6 h-6 text-white"/>
+                                {IconRender({key:stat.icon as EnumIconRenderStat})}
                             </div>
                         </div>
                     </div>

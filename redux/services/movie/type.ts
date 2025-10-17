@@ -11,3 +11,8 @@ export interface IMovieResponse{
     [EnumTableColum.RELEASE_DATE]?:string,
     [EnumTableColum.STATUS]?:IStatus,
 }
+export interface IMovieRecentResponse{
+    [EnumTableColum.TITLE]:string,
+    [EnumTableColum.STATUS]?:IStatus,
+    [EnumTableColum.BOOKING]:number,
+}

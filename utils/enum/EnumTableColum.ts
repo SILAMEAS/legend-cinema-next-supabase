@@ -24,5 +24,7 @@ export enum EnumTableColum {
     DISCOUNT = "discount",
     ACTIVE="active",
     BOOKING="booking",
+    ORDER="order",
+    LINK = "link",
 
 }

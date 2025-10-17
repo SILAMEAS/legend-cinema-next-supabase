@@ -13,7 +13,15 @@ export const banner = createApi({
             query: () => '/banner',
             providesTags: ['banner']
         }),
+        updateBanner: builder.mutation<IBannerResponse, { id: number; data: Partial<IBannerResponse> }>({
+            query: ({ id, data }) => ({
+                url: `/banner/${id}`,
+                method: 'PUT',
+                body: data,
+            }),
+            invalidatesTags: ['banner'], // Refresh banners after update
+        }),
     }),
 });
 
-export const {useGetBannerQuery} = banner;
+export const {useGetBannerQuery,useUpdateBannerMutation} = banner;
