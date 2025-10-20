@@ -9,6 +9,8 @@ import {EnumOperator} from "@/utils/enum/EnumOperator";
 
 export async function GET(request: Request) {
     try {
+        const userAgent = request.headers.get("user-agent");
+        console.log("UA:", userAgent);
         const {page, pageSize, search, orderBy, orderDirection,searchColumn,date} =
             getPaginationParams(request);
         const user = store.getState().counter.user
