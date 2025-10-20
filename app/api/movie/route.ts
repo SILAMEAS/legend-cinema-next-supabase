@@ -8,7 +8,7 @@ import {EnumRole} from "@/utils/enum/EnumRole";
 
 export async function GET(request: Request) {
     try {
-        const {page, limit, search, orderBy, orderDirection} =
+        const {page, pageSize, search, orderBy, orderDirection,searchColumn} =
             getPaginationParams(request);
         const user = store.getState().counter.user
         const selected = [
@@ -25,8 +25,8 @@ export async function GET(request: Request) {
         }
         const result = await fetchPaginatedData(EnumTableName.Movie, {
             page,
-            limit,
-            searchColumn: "name",
+            pageSize,
+            searchColumn,
             searchValue: search,
             orderBy,
             orderDirection,

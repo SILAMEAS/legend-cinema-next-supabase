@@ -10,9 +10,15 @@ export interface IMovieResponse{
     [EnumTableColum.GENRE]:string,
     [EnumTableColum.RELEASE_DATE]?:string,
     [EnumTableColum.STATUS]?:IStatus,
+    [EnumTableColum.DATE_SHOWING]:string,
 }
 export interface IMovieRecentResponse{
     [EnumTableColum.TITLE]:string,
     [EnumTableColum.STATUS]?:IStatus,
     [EnumTableColum.BOOKING]:number,
 }
+
+export interface ListDateShowingResponse {
+    [EnumTableColum.DATE_SHOWING]:string,
+}
+

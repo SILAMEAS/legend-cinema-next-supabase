@@ -6,13 +6,13 @@ import {EnumOperator} from "@/utils/enum/EnumOperator";
 
 export async function GET(request: Request) {
     try {
-        const {page, limit, search, orderBy, orderDirection} =
+        const {page, pageSize, search, orderBy, orderDirection, searchColumn} =
             getPaginationParams(request);
 
         const result = await fetchPaginatedData(EnumTableName.Category, {
             page,
-            limit,
-            searchColumn: "name",
+            pageSize,
+            searchColumn,
             searchValue: search,
             orderBy,
             orderDirection,

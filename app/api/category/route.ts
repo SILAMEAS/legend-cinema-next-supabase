@@ -6,15 +6,14 @@ import {EnumSort} from "@/utils/enum/EnumSort";
 
 export async function GET(request: Request) {
     try {
-        const {page, limit, search} =
+        const {page, pageSize, search,searchColumn} =
             getPaginationParams(request);
 
         const result = await fetchPaginatedData(EnumTableName.Category, {
             page,
-            limit,
-            searchColumn: "name",
+            pageSize,
+            searchColumn,
             searchValue: search,
-            orderBy:'id',
             orderDirection:EnumSort.ASC,
         });
         return Response.json(result);

@@ -5,13 +5,13 @@ import {fetchPaginatedData} from "@/utils/commons/fetchPaginatedData";
 
 export async function GET(request: Request) {
     try {
-        const {page, limit, search, orderBy, orderDirection} =
+        const {page, pageSize, search, orderBy, orderDirection,searchColumn} =
             getPaginationParams(request);
 
         const result = await fetchPaginatedData(EnumTableName.Offer, {
             page,
-            limit,
-            searchColumn: "name",
+            pageSize,
+            searchColumn,
             searchValue: search,
             orderBy,
             orderDirection,

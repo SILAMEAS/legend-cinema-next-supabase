@@ -1,4 +1,5 @@
 import {EnumSort} from "@/utils/enum/EnumSort";
+import {EnumTableColum} from "@/utils/enum/EnumTableColum";
 
 /**
  * Extracts pagination and sorting parameters from a Request URL.
@@ -8,11 +9,12 @@ import {EnumSort} from "@/utils/enum/EnumSort";
  */
 export interface PaginationParams {
     page: number;
-    limit: number;
+    pageSize: number;
     search: string;
     orderBy: string;
     orderDirection: EnumSort;
-    searchParams: URLSearchParams
+    searchParams: URLSearchParams,
+    searchColumn:EnumTableColum
 }
 
 export function getPaginationParams(request: Request): PaginationParams {
@@ -20,11 +22,12 @@ export function getPaginationParams(request: Request): PaginationParams {
 
     return {
         page: Number(searchParams.get("page")) || 1,
-        limit: Number(searchParams.get("limit")) || 10,
+        pageSize: Number(searchParams.get("pageSize")) || 10,
         search: searchParams.get("search") || "",
         orderBy: searchParams.get("orderBy") || "created_at",
         orderDirection:
             (searchParams.get("orderDirection") as EnumSort) || EnumSort.DESC,
-        searchParams
+        searchParams,
+        searchColumn: (searchParams.get("searchColumn")??EnumTableColum.NAME) as EnumTableColum,
     };
 }

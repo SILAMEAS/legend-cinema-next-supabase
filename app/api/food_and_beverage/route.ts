@@ -8,7 +8,7 @@ import {ANY} from "@/utils/commons/type";
 
 export async function GET(request: Request) {
     try {
-        const {page, limit, search, orderBy, orderDirection,searchParams} =
+        const {page, pageSize, search, orderBy, orderDirection,searchParams,searchColumn} =
             getPaginationParams(request);
         const categoryName = searchParams?.get("categoryName");
         const filters=categoryName?.toLowerCase()==='all'?[]:[
@@ -18,21 +18,22 @@ export async function GET(request: Request) {
                 value: [categoryName],
             },
         ]
+        const selected=[
+            EnumTableColum.ID,
+            EnumTableColum.NAME,
+            EnumTableColum.IMAGE,
+            EnumTableColum.PRICE,
+            EnumTableColum.DESCRIPTION,
+            `${EnumTableColum.CATEGORY}:${EnumTableName.Category} ( ${EnumTableColum.NAME} ,${EnumTableColum.ID})`
+        ];
         const result = await fetchPaginatedData(EnumTableName.FoodAndBeverage, {
             page,
-            limit,
+            pageSize,
             orderBy,
             orderDirection,
-            searchColumn: "name",
+            searchColumn,
             searchValue: search,
-            selected: `
-                id,
-                name,
-                image,
-                price,
-                description,
-                ${EnumTableColum.CATEGORY}:${EnumTableName.Category} ( ${EnumTableColum.NAME} ,${EnumTableColum.ID})
-              `,
+            selected:selected.join(","),
             filters,
             notNull: [EnumTableColum.CATEGORY], // ✅ ensures category is not null
         }).then(res=>{

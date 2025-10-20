@@ -13,7 +13,7 @@ export default function FnbPage() {
     const {getParam, setParam} = useQueryParams();
     const categoryParam = getParam(EnumSearchQuery.CATEGORY) ?? "all";
     const {currentData: categories, isLoading: loadingCategory} = useGetCategoryQuery();
-    const {currentData: fnbItems, isLoading, isFetching} = useGetFoodAndBeverageQuery({
+    const {currentData: fnbItems, isLoading:loadingFnbItems, isFetching:fetchingFnbItems} = useGetFoodAndBeverageQuery({
         categoryName: getParam(EnumSearchQuery.CATEGORY) ?? "all"
     }, {
         refetchOnFocus: true
@@ -52,7 +52,7 @@ export default function FnbPage() {
 
                         {/* FNB Items Grid */}
                         <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
-                            {(isFetching || isLoading)
+                            {(fetchingFnbItems || loadingFnbItems)
                                 ? <LoadingSkeleton ArrayLength={9}/>
                                 : fnbItems?.contents?.map((item) => (
                                     <FnbItemCard

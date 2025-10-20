@@ -3,6 +3,8 @@ import {ANY} from "@/utils/commons/type";
 import {EnumOperator} from "@/utils/enum/EnumOperator";
 import {EnumSort} from "@/utils/enum/EnumSort";
 import {EnumCount} from "@/utils/enum/EnumCount";
+import {PAGE_DEFAULT, PAGE_SIZE} from "@/utils/constants/constants";
+import {EnumTableColum} from "@/utils/enum/EnumTableColum";
 
 
 interface Filter {
@@ -13,7 +15,7 @@ interface Filter {
 
 interface FetchOptions {
     page?: number;
-    limit?: number;
+    pageSize?: number;
     searchColumn?: string;
     searchValue?: string;
     orderBy?: string;
@@ -31,19 +33,19 @@ export async function fetchPaginatedData<T>(
     options?: FetchOptions
 ) {
     const {
-        page = 1,
-        limit = 10,
+        page = PAGE_DEFAULT,
+        pageSize = PAGE_SIZE,
         searchColumn,
         searchValue,
-        orderBy = "created_at",
+        orderBy =EnumTableColum.CREATED_AT,
         orderDirection = EnumSort.DESC,
         selected,
         filters = [],
         notNull=[]
     } = options || {};
 
-    const from = (page - 1) * limit;
-    const to = from + limit - 1;
+    const from = (page - 1) * pageSize;
+    const to = from + pageSize - 1;
 
     const supabase = await createClient();
 
@@ -82,7 +84,7 @@ export async function fetchPaginatedData<T>(
             contents: [],
             hasNext: false,
             page,
-            pageSize: limit,
+            pageSize,
             total: 0,
             totalPages: 0,
             error: error.message,
@@ -90,14 +92,14 @@ export async function fetchPaginatedData<T>(
     }
 
     const total = count ?? 0;
-    const totalPages = total > 0 ? Math.ceil(total / limit) : 0;
-    const hasNext = page * limit < total;
+    const totalPages = total > 0 ? Math.ceil(total / pageSize) : 0;
+    const hasNext = page * pageSize < total;
 
     return {
         contents: (data || []) as T[],
         hasNext,
         page,
-        pageSize: limit,
+        pageSize,
         total,
         totalPages,
         error: null,

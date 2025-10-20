@@ -1,4 +1,5 @@
 import {IMovieResponse} from "@/redux/services/movie/type";
+import {EnumTableColum} from "@/utils/enum/EnumTableColum";
 
 export const BackupMovie: Array<IMovieResponse> = [
     {
@@ -8,6 +9,7 @@ export const BackupMovie: Array<IMovieResponse> = [
         rating: "7.2",
         duration: "109 min",
         genre: "Action, Sci-Fi",
+        [EnumTableColum.DATE_SHOWING]: ""
     },
     {
         id: 2,
@@ -16,6 +18,7 @@ export const BackupMovie: Array<IMovieResponse> = [
         rating: "6.8",
         duration: "125 min",
         genre: "Horror, Thriller",
+        [EnumTableColum.DATE_SHOWING]: ""
     },
     {
         id: 3,
@@ -24,6 +27,7 @@ export const BackupMovie: Array<IMovieResponse> = [
         rating: "7.1",
         duration: "132 min",
         genre: "Horror, Mystery",
+        [EnumTableColum.DATE_SHOWING]: ""
     },
     {
         id: 4,
@@ -32,6 +36,7 @@ export const BackupMovie: Array<IMovieResponse> = [
         rating: "8.5",
         duration: "102 min",
         genre: "Animation, Family",
+        [EnumTableColum.DATE_SHOWING]: ""
     },
     {
         id: 5,
@@ -40,6 +45,7 @@ export const BackupMovie: Array<IMovieResponse> = [
         rating: "5.7",
         duration: "138 min",
         genre: "Drama, Thriller",
+        [EnumTableColum.DATE_SHOWING]: ""
     },
     {
         id: 6,
@@ -48,6 +54,7 @@ export const BackupMovie: Array<IMovieResponse> = [
         rating: "8.1",
         duration: "104 min",
         genre: "Animation, Action",
+        [EnumTableColum.DATE_SHOWING]: ""
     },
     {
         id: 7,
@@ -56,6 +63,7 @@ export const BackupMovie: Array<IMovieResponse> = [
         rating: "7.2",
         duration: "105 min",
         genre: "Comedy, Fantasy",
+        [EnumTableColum.DATE_SHOWING]: ""
     },
     {
         id: 8,
@@ -64,6 +72,7 @@ export const BackupMovie: Array<IMovieResponse> = [
         rating: "7.3",
         duration: "140 min",
         genre: "Horror, Sci-Fi",
+        [EnumTableColum.DATE_SHOWING]: ""
     },
 ];
 

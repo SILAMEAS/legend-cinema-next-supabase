@@ -10,7 +10,7 @@ import {EnumSort} from "@/utils/enum/EnumSort";
 
 export async function GET(request: Request) {
     try {
-        const {search} =
+        const {search,searchColumn} =
             getPaginationParams(request);
         const user = store.getState().counter.user
         const selected = [
@@ -24,10 +24,9 @@ export async function GET(request: Request) {
         }
         const result = await fetchPaginatedData(EnumTableName.Movie, {
             page:1,
-            limit:4,
-            searchColumn: "name",
+            pageSize:4,
+            searchColumn,
             searchValue: search,
-            orderBy:"created_at",
             orderDirection:EnumSort.DESC,
             selected: selected.join(",")
         }).then(res=>{

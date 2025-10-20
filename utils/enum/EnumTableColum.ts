@@ -15,7 +15,7 @@ export enum EnumTableColum {
     GENRE = "genre",
     RELEASE_DATE = "releaseDate",
     STATUS = "status",
-    CREATED_AT = "createdAt",
+    CREATED_AT = "created_at",
     ALT = 'alt',
     ADDRESS = "address",
     PHONE = "phone",
@@ -26,5 +26,6 @@ export enum EnumTableColum {
     BOOKING="booking",
     ORDER="order",
     LINK = "link",
+    DATE_SHOWING = "date_showing",
 
 }

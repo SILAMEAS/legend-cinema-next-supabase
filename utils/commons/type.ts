@@ -2,6 +2,7 @@ import { SupabaseClient } from "@supabase/supabase-js";
 import {EnumOperator} from "@/utils/enum/EnumOperator";
 import {Session, User} from "@supabase/auth-js";
 import {EnumTableColum} from "@/utils/enum/EnumTableColum";
+import {EnumSort} from "@/utils/enum/EnumSort";
 
 export interface TypeCreateUser{
     email:string,
@@ -40,4 +41,12 @@ export interface IPagination<T> {
     total?: number;
     hasNext?: boolean;
     totalInvalid?: number;
+}
+export interface IPaginationRequest{
+    page?:number;
+    pageSize?:number;
+    search?:string;
+    orderBy?:string,
+    orderDirection?:EnumSort,
+    searchColumn?:EnumTableColum,
 }
