@@ -2,8 +2,8 @@
 import {Header} from "@/components/header"
 import {Footer} from "@/components/footer"
 import {OfferCard} from "@/components/offer-card"
-import Loading from "@/app/loading";
 import {useGetOfferQuery} from "@/redux/services/offer/offer";
+import LoadingSkeleton from "@/app/loadingSkeleton";
 
 export default function OffersPage() {
 
@@ -21,7 +21,7 @@ export default function OffersPage() {
                     </p>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-                        {loading ? <Loading/> : offers?.contents?.map((offer) => (
+                        {loading ? <LoadingSkeleton/> : offers?.contents?.map((offer) => (
                             <OfferCard
                                 key={offer.id}
                                 title={offer.title}

@@ -2,8 +2,8 @@
 import {Header} from "@/components/header"
 import {Footer} from "@/components/footer"
 import {CinemaCard} from "@/components/cinema-card"
-import Loading from "@/app/loading";
 import {useGetCinemaQuery} from "@/redux/services/cinema/cinema";
+import LoadingSkeleton from "@/app/loadingSkeleton";
 
 export default function CinemasPage() {
     const {currentData, isLoading} = useGetCinemaQuery();
@@ -20,7 +20,7 @@ export default function CinemasPage() {
 
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8">
                         {
-                            isLoading ? <Loading/> : currentData?.contents?.map((cinema) => (
+                            isLoading ? <LoadingSkeleton/> : currentData?.contents?.map((cinema) => (
                                 <CinemaCard
                                     key={cinema.id}
                                     name={cinema.name}

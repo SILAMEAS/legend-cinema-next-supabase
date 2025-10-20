@@ -11,4 +11,5 @@ export enum EnumTableName{
     Banner="Banner",
     MovieStatus="MovieStatus",
     Dashboard="Dashboard",
+    DateShowing="DateShowing",
 }

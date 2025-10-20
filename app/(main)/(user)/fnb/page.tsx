@@ -7,6 +7,7 @@ import React from "react";
 import {FnbItemCard} from "@/components/fnb-item-card";
 import {useGetCategoryQuery} from "@/redux/services/category/category";
 import {useGetFoodAndBeverageQuery} from "@/redux/services/food_and_beverage/food_and_beverage";
+import LoadingSkeleton from "@/app/loadingSkeleton";
 
 export default function FnbPage() {
     const {getParam, setParam} = useQueryParams();
@@ -52,12 +53,7 @@ export default function FnbPage() {
                         {/* FNB Items Grid */}
                         <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
                             {(isFetching || isLoading)
-                                ? Array.from({length: 8}).map((_, idx) => (
-                                    <div
-                                        key={idx}
-                                        className="h-40 bg-zinc-800 animate-pulse rounded-lg"
-                                    />
-                                ))
+                                ? <LoadingSkeleton ArrayLength={9}/>
                                 : fnbItems?.contents?.map((item) => (
                                     <FnbItemCard
                                         key={item.id}

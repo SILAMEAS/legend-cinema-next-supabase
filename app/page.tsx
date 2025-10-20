@@ -6,6 +6,7 @@ import {MovieCard} from "@/components/movie-card"
 import {PromoCard} from "@/components/promo-card"
 import {useGetMovieQuery} from "@/redux/services/movie/movie";
 import {useGetPromotionQuery} from "@/redux/services/promotion/promotion";
+import LoadingSkeleton from "@/app/loadingSkeleton";
 
 export default function Home() {
     const dates = [
@@ -15,15 +16,13 @@ export default function Home() {
         {day: "Mon", date: "13", month: "Oct"},
         {day: "Tue", date: "14", month: "Oct"},
     ];
-    const {currentData: movies} = useGetMovieQuery({});
-    const {currentData: promotion}=useGetPromotionQuery();
+    const {currentData: movies,isLoading:moviesLoading} = useGetMovieQuery({});
+    const {currentData: promotion,isLoading:promotionLoading}=useGetPromotionQuery();
     return (
         <div className="min-h-screen bg-black text-white">
             <Header/>
-
             {/* Hero Section */}
             <HeroCarousel/>
-
             {/* Now Showing Section */}
             <section className="py-8 md:py-12">
                 <div className="container mx-auto px-4 md:px-6">
@@ -50,7 +49,9 @@ export default function Home() {
 
                     <div
                         className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 md:gap-6">
-                        {movies?.contents?.map((movie) => (
+                        {
+                            moviesLoading?<LoadingSkeleton ArrayLength={9}/>:
+                            movies?.contents?.map((movie) => (
                             <MovieCard
                                 key={movie.id}
                                 title={movie.title}
@@ -70,7 +71,8 @@ export default function Home() {
                     <h2 className="text-2xl md:text-3xl font-bold mb-6 md:mb-8">What is new?</h2>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
-                        {promotion?.contents?.map((promo) => (
+                        {   promotionLoading?<LoadingSkeleton/>:
+                            promotion?.contents?.map((promo) => (
                             <PromoCard key={promo.id} title={promo.title} image={promo.image}/>
                         ))}
                     </div>
