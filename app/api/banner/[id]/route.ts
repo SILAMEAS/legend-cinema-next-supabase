@@ -5,7 +5,8 @@ import {ANY} from "@/utils/commons/type";
 
 export async function PUT(
     request: Request,
-    { params }: { params: { id: string } }
+    // error when build ;  { params }: { params: { id: string } }
+    { params }: ANY
 ) {
     try {
         const supabase = await createClient();
