@@ -14,7 +14,8 @@ export interface PaginationParams {
     orderBy: string;
     orderDirection: EnumSort;
     searchParams: URLSearchParams,
-    searchColumn:EnumTableColum
+    searchColumn:EnumTableColum,
+    date:string|null
 }
 
 export function getPaginationParams(request: Request): PaginationParams {
@@ -29,5 +30,6 @@ export function getPaginationParams(request: Request): PaginationParams {
             (searchParams.get("orderDirection") as EnumSort) || EnumSort.DESC,
         searchParams,
         searchColumn: (searchParams.get("searchColumn")??EnumTableColum.NAME) as EnumTableColum,
+        date:searchParams.get("date")
     };
 }

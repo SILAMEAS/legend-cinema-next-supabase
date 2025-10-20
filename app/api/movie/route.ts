@@ -4,11 +4,12 @@ import {fetchPaginatedData} from "@/utils/commons/fetchPaginatedData";
 import {EnumTableColum} from "@/utils/enum/EnumTableColum";
 import {store} from "@/redux/store";
 import {EnumRole} from "@/utils/enum/EnumRole";
+import {EnumOperator} from "@/utils/enum/EnumOperator";
 
 
 export async function GET(request: Request) {
     try {
-        const {page, pageSize, search, orderBy, orderDirection,searchColumn} =
+        const {page, pageSize, search, orderBy, orderDirection,searchColumn,date} =
             getPaginationParams(request);
         const user = store.getState().counter.user
         const selected = [
@@ -30,7 +31,12 @@ export async function GET(request: Request) {
             searchValue: search,
             orderBy,
             orderDirection,
-            selected: selected.join(",")
+            selected: selected.join(","),
+            filters:date?[{
+                column:EnumTableColum.DATE_SHOWING,
+                operator:EnumOperator.eq,
+                value:date
+            }]:[]
         });
         return Response.json(result);
     } catch (error) {

@@ -101,6 +101,7 @@ export function Header() {
                                 type="text"
                                 placeholder="Search Movies..."
                                 className="bg-transparent border-none outline-none text-sm text-zinc-400 placeholder:text-zinc-600 w-full"
+                                onChange={(e) => handleSearchDebounce(e.target.value)}
                             />
                             <Search className="w-4 h-4 text-zinc-600"/>
                         </div>

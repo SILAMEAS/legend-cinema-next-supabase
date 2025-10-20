@@ -49,4 +49,5 @@ export interface IPaginationRequest{
     orderBy?:string,
     orderDirection?:EnumSort,
     searchColumn?:EnumTableColum,
+    date?:string|null
 }

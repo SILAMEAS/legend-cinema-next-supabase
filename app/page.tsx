@@ -8,25 +8,38 @@ import {useGetListDateShowingQuery, useGetMovieQuery} from "@/redux/services/mov
 import {useGetPromotionQuery} from "@/redux/services/promotion/promotion";
 import LoadingSkeleton from "@/app/loadingSkeleton";
 import {EnumTableColum} from "@/utils/enum/EnumTableColum";
-import {formatDate} from "@/utils/commons/formatDate";
+import {compareDate, formatDate} from "@/utils/commons/formatDate";
 import {useAppSelector} from "@/redux/hooks";
 import {EnumSort} from "@/utils/enum/EnumSort";
 import {PAGE_SIZE} from "@/utils/constants/constants";
+import {useEffect, useState} from "react";
 
 export default function Home() {
+    /** state */
+    const [selectedDate, setSelectedDate] = useState<string|undefined>(undefined);
     const movieRedux= useAppSelector(state => state.counter.movie);
     const {currentData: dates,isLoading: datesLoading} = useGetListDateShowingQuery({
         pageSize:PAGE_SIZE,
         orderBy:EnumTableColum.CREATED_AT,
         orderDirection:EnumSort.DESC
     });
-    const {currentData: movies, isLoading: moviesLoading} = useGetMovieQuery({
+    const {currentData: movies, isLoading: moviesLoading,isFetching:moviesFetching} = useGetMovieQuery({
         search:movieRedux?.search,
-        searchColumn:EnumTableColum.TITLE
+        searchColumn:EnumTableColum.TITLE,
+        date:selectedDate
+    },{
+        refetchOnMountOrArgChange:true
     });
     const {currentData: promotion, isLoading: promotionLoading} = useGetPromotionQuery();
+
+    useEffect(()=>{
+        if(dates?.contents){
+            setSelectedDate(dates?.contents[0][EnumTableColum.DATE_SHOWING]);
+        }
+    },[dates])
     return (
         <div className="min-h-screen bg-black text-white">
+
             <Header/>
             {/* Hero Section */}
             <HeroCarousel/>
@@ -44,8 +57,9 @@ export default function Home() {
                             <button
                                 key={index}
                                 className={`flex flex-col items-center justify-center px-6 md:px-8 py-3 md:py-4 rounded-lg border-2 transition-colors flex-shrink-0 ${
-                                    index === 0 ? "border-red-600 bg-red-600/10" : "border-zinc-800 hover:border-zinc-700"
+                                    selectedDate&& compareDate({dateInput1:date[EnumTableColum.DATE_SHOWING],dateInput2:selectedDate}) ? "border-red-600 bg-red-600/10" : "border-zinc-800 hover:border-zinc-700"
                                 }`}
+                                onClick={() => setSelectedDate(date[EnumTableColum.DATE_SHOWING])}
                             >
                                 <div
                                     className="text-xs text-zinc-400 mb-1">{formatDate(date[EnumTableColum.DATE_SHOWING]).weekday}</div>
@@ -60,7 +74,7 @@ export default function Home() {
                     <div
                         className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 md:gap-6">
                         {
-                            moviesLoading ? <LoadingSkeleton ArrayLength={9}/> :
+                            moviesLoading||moviesFetching ? <LoadingSkeleton ArrayLength={9}/> :
                                 movies?.contents?.map((movie) => (
                                     <MovieCard
                                         key={movie.id}
