@@ -23,7 +23,7 @@ export function SignUpForm({
     const [isLoading, setIsLoading] = useState(false);
     const router = useRouter();
 
-    /** create banner  */
+    /** create upload  */
     const [createUser] = useCreateUserMutation({});
 
     const handleSignUp = async (e: React.FormEvent) => {
@@ -47,7 +47,7 @@ export function SignUpForm({
                 },
             });
             if (error) throw error;
-            /** _db_insert_data :  calling add new banner to db */
+            /** _db_insert_data :  calling add new upload to db */
             await createUser(data).unwrap();
             router.push(EnumPage.AUTH_SUCCESS);
         } catch (error: unknown) {

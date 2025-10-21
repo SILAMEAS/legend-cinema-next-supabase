@@ -47,7 +47,7 @@ export function LoginForm({
 
       await getUser().unwrap().then(user=>dispatch(setUser(user)))
 
-      // Update this route to redirect to an authenticated route. The banner already has an active session.
+      // Update this route to redirect to an authenticated route. The upload already has an active session.
       router.push(EnumPage.ROOT);
     } catch (error: unknown) {
       setError(error instanceof Error ? error.message : "An error occurred");

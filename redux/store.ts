@@ -9,6 +9,7 @@ import {category} from "@/redux/services/category/category";
 import {promotion} from "@/redux/services/promotion/promotion";
 import {dashboard} from "@/redux/services/dashboard/dashboard";
 import {food_and_beverage} from "@/redux/services/food_and_beverage/food_and_beverage";
+import {supabaseImageApi} from "@/redux/services/upload/upload";
 
 export const store = configureStore({
     reducer: {
@@ -22,6 +23,7 @@ export const store = configureStore({
         [dashboard.reducerPath]: dashboard.reducer,
         [promotion.reducerPath]: promotion.reducer,
         [food_and_beverage.reducerPath]: food_and_beverage.reducer,
+        [supabaseImageApi.reducerPath]:supabaseImageApi.reducer
     },
     middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware().concat(
@@ -33,7 +35,8 @@ export const store = configureStore({
             cinema.middleware,
             dashboard.middleware,
             promotion.middleware,
-            food_and_beverage.middleware
+            food_and_beverage.middleware,
+            supabaseImageApi.middleware,
         ),
 });
 

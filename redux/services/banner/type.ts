@@ -8,5 +8,4 @@ export interface IBannerResponse extends baseColumn {
     [EnumTableColum.LINK]:string,
     [EnumTableColum.ORDER]:number,
     [EnumTableColum.ACTIVE]:boolean
-
 }

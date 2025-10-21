@@ -2,9 +2,6 @@ import {updateSession} from "@/lib/supabase/middleware";
 import {type NextRequest} from "next/server";
 
 export async function middleware(request: NextRequest) {
-    // ✅ Log the user-agent
-    const userAgent = request.headers.get("user-agent") || "unknown";
-    console.log(`[User-Agent] ${userAgent} - Path: ${request.nextUrl.pathname}`);
     return await updateSession(request);
 }
 

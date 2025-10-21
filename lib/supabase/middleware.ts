@@ -47,9 +47,6 @@ export async function updateSession(request: NextRequest) {
   const { data } = await supabase.auth.getClaims();
   const user = data?.claims;
 
-    // ✅ Log user-agent + user info
-    const userAgent = request.headers.get("user-agent") || "unknown";
-    console.log(`[User-Agent] ${userAgent} | User: ${user?.email || "Guest"}`);
 
   if (
     request.nextUrl.pathname !== "/" &&
@@ -57,7 +54,7 @@ export async function updateSession(request: NextRequest) {
     !request.nextUrl.pathname.startsWith("/login") &&
     !request.nextUrl.pathname.startsWith("/auth")
   ) {
-    // no banner, potentially respond by redirecting the banner to the login page
+    // no upload, potentially respond by redirecting the upload to the login page
     const url = request.nextUrl.clone();
     url.pathname = "/auth/login";
     return NextResponse.redirect(url);
@@ -74,7 +71,7 @@ export async function updateSession(request: NextRequest) {
   // 4. Finally:
   //    return myNewResponse
   // If this is not done, you may be causing the browser and server to go out
-  // of sync and terminate the banner's session prematurely!
+  // of sync and terminate the upload's session prematurely!
 
   return supabaseResponse;
 }

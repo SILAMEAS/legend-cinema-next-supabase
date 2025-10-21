@@ -18,14 +18,14 @@ export async function GET(request: NextRequest) {
       token_hash,
     });
     if (!error) {
-      // redirect banner to specified redirect URL or root of app
+      // redirect upload to specified redirect URL or root of app
       redirect(next);
     } else {
-      // redirect the banner to an error page with some instructions
+      // redirect the upload to an error page with some instructions
       redirect(`${EnumPage.AUTH_ERROR}?error=${error?.message}`);
     }
   }
 
-  // redirect the banner to an error page with some instructions
+  // redirect the upload to an error page with some instructions
   redirect(`${EnumPage.AUTH_ERROR}?error=No token hash or type`);
 }

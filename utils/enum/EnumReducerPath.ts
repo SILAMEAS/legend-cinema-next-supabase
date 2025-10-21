@@ -8,5 +8,6 @@ export enum EnumReducerPath{
     offer="offer",
     promotion="promotion",
     food_and_beverage="food_and_beverage",
+    supabaseImage="supabaseImage"
 
 }
