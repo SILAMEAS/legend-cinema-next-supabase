@@ -47,6 +47,10 @@ export async function updateSession(request: NextRequest) {
   const { data } = await supabase.auth.getClaims();
   const user = data?.claims;
 
+    // ✅ Log user-agent + user info
+    const userAgent = request.headers.get("user-agent") || "unknown";
+    console.log(`[User-Agent] ${userAgent} | User: ${user?.email || "Guest"}`);
+
   if (
     request.nextUrl.pathname !== "/" &&
     !user &&
