@@ -13,7 +13,6 @@ import {useAppSelector} from "@/redux/hooks";
 import {EnumSort} from "@/utils/enum/EnumSort";
 import {PAGE_SIZE} from "@/utils/constants/constants";
 import {useEffect, useState} from "react";
-import {$ok} from "@/utils/commons/$ok";
 
 export default function Home() {
     const movieRedux= useAppSelector(state => state.counter.movie);
@@ -25,12 +24,13 @@ export default function Home() {
     });
     /** state */
     const [selectedDate, setSelectedDate] = useState<string|undefined>(undefined);
+    const cinemaId=cinema?.selected?.split("_")[0]??undefined;
     const { data: movies, isLoading: moviesLoading } = useGetMovieQuery(
         {
             search: movieRedux?.search,
             searchColumn: EnumTableColum.TITLE,
             date: selectedDate,
-            cinemaId:$ok(cinema?.selected)? cinema?.selected?.split("_")[0]:undefined,
+            cinemaId:cinemaId,
         },
         {
             refetchOnMountOrArgChange: false,
@@ -94,7 +94,8 @@ export default function Home() {
                                         genre={movie.genre}
                                         dateShowing={movie[EnumTableColum.DATE_SHOWING]}
                                     />
-                                ))}
+                                ))
+                        }
                     </div>
                 </div>
             </section>

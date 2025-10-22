@@ -6,6 +6,7 @@ import {EnumRole} from "@/utils/enum/EnumRole";
 import {EnumOperator} from "@/utils/enum/EnumOperator";
 import {supabaseService} from "@/lib/supabase/services/supabase.service";
 import {IMovieResponse} from "@/redux/services/movie/type";
+import {$ok} from "@/utils/commons/$ok";
 
 
 export async function GET(request: Request) {
@@ -42,11 +43,12 @@ export async function GET(request: Request) {
                 value: date
             });
         }
-        if(cinemaId){
+        console.log("cinemaId",cinemaId)
+        if($ok(cinemaId)){
             filters.push({
                 column: EnumTableColum.CINEMA_ID,
                 operator: EnumOperator.eq,
-                value: cinemaId
+                value: cinemaId?.split("_")[0]
             });
             notNull.push(EnumTableColum.CINEMA)
         }

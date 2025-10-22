@@ -28,6 +28,6 @@ export function getParams(request: Request): PaginationParams {
         searchColumn: (searchParams.get("searchColumn") as EnumTableColum) || EnumTableColum.NAME,
         date: searchParams.get("date"),
         onlyName:Boolean(searchParams.get("onlyName")),
-        cinemaId:searchParams.get("cinemaName")
+        cinemaId:searchParams.get("cinemaId")
     };
 }

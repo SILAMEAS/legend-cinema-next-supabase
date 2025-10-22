@@ -97,7 +97,7 @@ export function Header() {
                             </button>
                             <button
                                 className="hidden md:flex items-center gap-1 px-3 py-2 hover:bg-zinc-900 rounded-md">
-                                <Image src="/us-flag-waving.png" alt="EN" width={24} height={16}
+                                <Image src="/images/us-flag-waving.png" alt="EN" width={24} height={16}
                                        className="rounded-sm"/>
                                 <span className="text-sm">EN</span>
                                 <ChevronDown className="w-4 h-4"/>
