@@ -11,6 +11,8 @@ export interface PaginationParams {
     searchParams: URLSearchParams;
     searchColumn: EnumTableColum;
     date: string | null;
+    onlyName:boolean,
+    cinemaId:string|null
 }
 
 export function getParams(request: Request): PaginationParams {
@@ -24,6 +26,8 @@ export function getParams(request: Request): PaginationParams {
         orderDirection: (searchParams.get("orderDirection") as EnumSort) || EnumSort.DESC,
         searchParams,
         searchColumn: (searchParams.get("searchColumn") as EnumTableColum) || EnumTableColum.NAME,
-        date: searchParams.get("date")
+        date: searchParams.get("date"),
+        onlyName:Boolean(searchParams.get("onlyName")),
+        cinemaId:searchParams.get("cinemaName")
     };
 }

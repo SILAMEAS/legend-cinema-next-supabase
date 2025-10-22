@@ -8,18 +8,29 @@ import React, {useCallback, useMemo, useState} from "react"
 import {EnumPage} from "@/utils/enum/EnumPage";
 import {AuthButton} from "@/components/auth-button";
 import {useAppDispatch, useAppSelector} from "@/redux/hooks";
-import {setMovie} from "@/redux/slices/counterSlice";
+import {setCinema, setMovie} from "@/redux/slices/counterSlice";
 import {debounce} from "lodash";
 import {STOP_TYPING_TIMEOUT} from "@/utils/constants/constants";
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuRadioGroup,
+    DropdownMenuRadioItem,
+    DropdownMenuTrigger
+} from "@/components/ui/dropdown-menu";
+import {$ok} from "@/utils/commons/$ok";
+import {useGetCinemaQuery} from "@/redux/services/cinema/cinema";
+import {ANY} from "@/utils/commons/type";
 
 export function Header() {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const movie = useAppSelector(state => state.counter.movie);
+    const cinema = useAppSelector(state => state.counter.cinema);
     const dispatch = useAppDispatch();
     const debouncedSearch = useMemo(
         () =>
             debounce((search: string) => {
-                dispatch(setMovie({ ...movie, search }));
+                dispatch(setMovie({...movie, search}));
             }, STOP_TYPING_TIMEOUT),
         [dispatch, movie]
     );
@@ -28,7 +39,7 @@ export function Header() {
         (search: string) => debouncedSearch(search),
         [debouncedSearch]
     );
-
+    const {currentData: listCinemas, isLoading, isFetching} = useGetCinemaQuery()
     return (
         <>
             {/* Top Navigation Bar */}
@@ -147,11 +158,45 @@ export function Header() {
                                 F&B
                             </Link>
                         </div>
-                        <button className="flex items-center gap-2 text-red-600">
-                            <MapPin className="w-4 h-4"/>
-                            All Cinemas
-                            <ChevronDown className="w-4 h-4"/>
-                        </button>
+
+
+                        <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                                <Button className="flex items-center gap-2 text-red-600">
+                                    <MapPin className="w-4 h-4"/>
+                                    {$ok(cinema?.selected) ? cinema?.selected?.split("_")[1] : "All Cinemas"}
+                                    <ChevronDown className="w-4 h-4"/>
+                                </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent className="w-content bg-black text-red-500" align="start">
+                                <DropdownMenuRadioGroup
+                                    value={`${cinema?.selected}`}
+                                    onValueChange={(e) => {
+                                        dispatch(
+                                            setCinema(
+                                                {
+                                                    ...cinema,
+                                                    selected:e
+                                                }
+                                            )
+                                        )
+                                    }}
+                                >
+                                    <DropdownMenuRadioItem className="flex gap-2" value={"null" as ANY}>
+                                        <span>All Cinemas</span>
+                                    </DropdownMenuRadioItem>
+                                    {
+                                        (isFetching || isLoading) ? <>loading ... </> :
+                                            listCinemas?.contents?.map((c) => (
+                                                <DropdownMenuRadioItem className="flex gap-2" value={`${c.id}_${c.name}`}
+                                                                       key={c.id}>
+                                                    <span>{c.name}</span>
+                                                </DropdownMenuRadioItem>
+                                            ))
+                                    }
+                                </DropdownMenuRadioGroup>
+                            </DropdownMenuContent>
+                        </DropdownMenu>
                     </div>
                 </div>
             </nav>

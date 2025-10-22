@@ -3,6 +3,7 @@ import {EnumBaseUrl} from "@/utils/enum/EnumBaseUrl";
 import {EnumReducerPath} from "@/utils/enum/EnumReducerPath";
 import {ICinemaResponse} from "@/redux/services/cinema/type";
 import {IPagination} from "@/utils/commons/type";
+import {EnumMethod} from "@/utils/enum/EnumMethod";
 
 export const cinema = createApi({
     reducerPath: EnumReducerPath.cinema,
@@ -10,8 +11,11 @@ export const cinema = createApi({
     tagTypes: ["cinema"],
     endpoints: (builder) => ({
         getCinema: builder.query<IPagination<ICinemaResponse>, void>({
-            query: () => '/cinema',
-            providesTags: ['cinema']
+            query: () => ({
+                url: `/cinema`,
+                method: EnumMethod.GET
+            }),
+            providesTags: ['cinema'],
         }),
     }),
 });

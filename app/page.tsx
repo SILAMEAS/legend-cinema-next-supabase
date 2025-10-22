@@ -13,23 +13,32 @@ import {useAppSelector} from "@/redux/hooks";
 import {EnumSort} from "@/utils/enum/EnumSort";
 import {PAGE_SIZE} from "@/utils/constants/constants";
 import {useEffect, useState} from "react";
+import {$ok} from "@/utils/commons/$ok";
 
 export default function Home() {
-    /** state */
-    const [selectedDate, setSelectedDate] = useState<string|undefined>(undefined);
     const movieRedux= useAppSelector(state => state.counter.movie);
+    const cinema= useAppSelector(state => state.counter.cinema);
     const {currentData: dates,isLoading: datesLoading} = useGetListDateShowingQuery({
         pageSize:PAGE_SIZE,
         orderBy:EnumTableColum.CREATED_AT,
         orderDirection:EnumSort.DESC
     });
-    const {currentData: movies, isLoading: moviesLoading,isFetching:moviesFetching} = useGetMovieQuery({
-        search:movieRedux?.search,
-        searchColumn:EnumTableColum.TITLE,
-        date:selectedDate
-    },{
-        refetchOnMountOrArgChange:true
-    });
+    /** state */
+    const [selectedDate, setSelectedDate] = useState<string|undefined>(undefined);
+    const { data: movies, isLoading: moviesLoading } = useGetMovieQuery(
+        {
+            search: movieRedux?.search,
+            searchColumn: EnumTableColum.TITLE,
+            date: selectedDate,
+            cinemaId:$ok(cinema?.selected)? cinema?.selected?.split("_")[0]:undefined,
+        },
+        {
+            refetchOnMountOrArgChange: false,
+            refetchOnReconnect: false,
+            refetchOnFocus: false,
+            skip: !selectedDate, // prevent fetch until date ready
+        }
+    );
     const {currentData: promotion, isLoading: promotionLoading} = useGetPromotionQuery();
 
     useEffect(()=>{
@@ -74,7 +83,7 @@ export default function Home() {
                     <div
                         className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 md:gap-6">
                         {
-                            moviesLoading||moviesFetching ? <LoadingSkeleton ArrayLength={9}/> :
+                            moviesLoading ? <LoadingSkeleton ArrayLength={9}/> :
                                 movies?.contents?.map((movie) => (
                                     <MovieCard
                                         key={movie.id}

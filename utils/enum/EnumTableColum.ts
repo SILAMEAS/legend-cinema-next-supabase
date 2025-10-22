@@ -27,5 +27,8 @@ export enum EnumTableColum {
     ORDER="order",
     LINK = "link",
     DATE_SHOWING = "date_showing",
+    CINEMA = "cinema",
+    CINEMA_NAME = "cinema.name",
+    CINEMA_ID = "cinema.id",
 
 }

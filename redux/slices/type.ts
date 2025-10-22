@@ -4,4 +4,9 @@ export interface IMovieRedux{
     search?:string;
 }
 
-export interface IUserRedux extends IUserResponse{}
+export type IUserRedux = IUserResponse;
+
+export interface ICinemaRedux{
+    selected?:string,
+    listCinemas?:Array<string>
+}

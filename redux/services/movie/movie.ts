@@ -10,7 +10,7 @@ export const movie = createApi({
     baseQuery: fetchBaseQuery({baseUrl: EnumBaseUrl.API}),
     tagTypes: ["movie","recent-movie","date_movie"],
     endpoints: (builder) => ({
-        getMovie: builder.query<IPagination<IMovieResponse>, {title?:string,status?:string}&IPaginationRequest>({
+        getMovie: builder.query<IPagination<IMovieResponse>, {title?:string,status?:string,cinemaId?:string|number}&IPaginationRequest>({
             query: (params) => ({
                 url: `/movie`,
                 method: EnumMethod.GET,

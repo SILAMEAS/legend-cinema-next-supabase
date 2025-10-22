@@ -10,10 +10,15 @@ import {IMovieResponse} from "@/redux/services/movie/type";
 
 export async function GET(request: Request) {
     try {
-        const {page, pageSize, search, orderBy, orderDirection, searchColumn, date} =
+        /** get user from redux that already store on layout **/
+        const user = store.getState().counter.user;
+        /** get param from request  */
+        const {page, pageSize, search, orderBy, orderDirection, searchColumn, date,onlyName,cinemaId} =
             getParams(request);
-        const user = store.getState().counter.user
-        const select = [
+        /** column can't null  **/
+        const notNull=[];
+        /** select column for display  **/
+        let select = [
             EnumTableColum.ID,
             EnumTableColum.TITLE,
             EnumTableColum.IMAGE,
@@ -21,9 +26,34 @@ export async function GET(request: Request) {
             EnumTableColum.DURATION,
             EnumTableColum.GENRE,
             `${EnumTableColum.STATUS}:${EnumTableName.MovieStatus} ( ${EnumTableColum.NAME} ,${EnumTableColum.ID})`,
+            `${EnumTableColum.CINEMA}:${EnumTableName.Cinema} ( ${EnumTableColum.NAME} ,${EnumTableColum.ID})`,
         ]
+        /** add more column release if user role is ADMIN */
         if (user?.role === EnumRole.ADMIN) {
             select.push(EnumTableColum.RELEASE_DATE)
+        }
+
+        /** add filter before display  */
+        const filters=[];
+        if(date){
+            filters.push({
+                column: EnumTableColum.DATE_SHOWING,
+                operator: EnumOperator.eq,
+                value: date
+            });
+        }
+        if(cinemaId){
+            filters.push({
+                column: EnumTableColum.CINEMA_ID,
+                operator: EnumOperator.eq,
+                value: cinemaId
+            });
+            notNull.push(EnumTableColum.CINEMA)
+        }
+
+        /** show only name,id for list cinema for choosing */
+        if(onlyName){
+            select=[EnumTableColum.NAME,EnumTableColum.ID]
         }
         const result = await supabaseService.findMany<IMovieResponse>(EnumTableName.Movie, {
             page,
@@ -33,11 +63,8 @@ export async function GET(request: Request) {
             orderBy,
             orderDirection,
             select: select.join(","),
-            filters: date ? [{
-                column: EnumTableColum.DATE_SHOWING,
-                operator: EnumOperator.eq,
-                value: date
-            }] : []
+            filters,
+            notNull
         });
         return Response.json(result);
     } catch (error) {

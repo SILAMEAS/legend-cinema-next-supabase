@@ -7,6 +7,12 @@ import {ICategoryResponse} from "@/redux/services/category/type";
 
 export async function GET(request: Request) {
     try {
+        /** get user from redux that already store on layout **/
+        /** get param from request  */
+        /** select column for display  **/
+        /** add more column release if user role is ADMIN */
+        /** add filter before display  */
+        /** show only name,id for list cinema for choosing */
         const {page, pageSize, search, orderBy, orderDirection, searchColumn} =
             getParams(request);
 
