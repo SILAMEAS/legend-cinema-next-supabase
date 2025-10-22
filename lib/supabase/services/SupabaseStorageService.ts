@@ -1,4 +1,4 @@
-import { supabaseStorageClient as supabase } from "@/lib/supabase/serverStorage";
+import { supabaseStorageClient as supabase } from "@/lib/supabase/config/serverStorage";
 
 const BUCKET = "images";
 const FOLDER = "uploads";

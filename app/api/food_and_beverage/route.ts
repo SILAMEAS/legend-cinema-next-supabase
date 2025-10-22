@@ -1,24 +1,25 @@
 import {EnumTableName} from "@/utils/enum/EnumTable";
-import {getPaginationParams} from "@/utils/commons/getPaginationParams";
-import {fetchPaginatedData} from "@/utils/commons/fetchPaginatedData";
+import {getParams} from "@/lib/supabase/services/method/getParams";
 import {EnumTableColum} from "@/utils/enum/EnumTableColum";
 import {EnumOperator} from "@/utils/enum/EnumOperator";
 import {ANY} from "@/utils/commons/type";
+import {supabaseService} from "@/lib/supabase/services/supabase.service";
+import {IFoodAndBeverageResponse} from "@/redux/services/food_and_beverage/type";
 
 
 export async function GET(request: Request) {
     try {
-        const {page, pageSize, search, orderBy, orderDirection,searchParams,searchColumn} =
-            getPaginationParams(request);
+        const {page, pageSize, search, orderBy, orderDirection, searchParams, searchColumn} =
+            getParams(request);
         const categoryName = searchParams?.get("categoryName");
-        const filters=categoryName?.toLowerCase()==='all'?[]:[
+        const filters = categoryName?.toLowerCase() === 'all' ? [] : [
             {
                 column: EnumTableColum.CATEGORY_NAME, // ✅ path to related table column
-                operator:EnumOperator.in,
+                operator: EnumOperator.in,
                 value: [categoryName],
             },
         ]
-        const selected=[
+        const select = [
             EnumTableColum.ID,
             EnumTableColum.NAME,
             EnumTableColum.IMAGE,
@@ -26,20 +27,20 @@ export async function GET(request: Request) {
             EnumTableColum.DESCRIPTION,
             `${EnumTableColum.CATEGORY}:${EnumTableName.Category} ( ${EnumTableColum.NAME} ,${EnumTableColum.ID})`
         ];
-        const result = await fetchPaginatedData(EnumTableName.FoodAndBeverage, {
+        const result = await supabaseService.findMany<IFoodAndBeverageResponse>(EnumTableName.FoodAndBeverage, {
             page,
             pageSize,
             orderBy,
             orderDirection,
             searchColumn,
             searchValue: search,
-            selected:selected.join(","),
+            select: select.join(","),
             filters,
             notNull: [EnumTableColum.CATEGORY], // ✅ ensures category is not null
-        }).then(res=>{
+        }).then(res => {
             return {
                 ...res,
-                contents: res.contents.map((item : ANY) => ({
+                contents: res.contents.map((item: ANY) => ({
                     ...item,
                     category: item.category?.name ?? null, // <-- just take the name
                 }))

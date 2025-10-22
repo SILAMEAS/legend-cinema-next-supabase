@@ -1,7 +1,8 @@
-import { EnumTableName } from "@/utils/enum/EnumTable";
-import { getPaginationParams } from "@/utils/commons/getPaginationParams";
-import { fetchPaginatedData } from "@/utils/commons/fetchPaginatedData";
-import { EnumSort } from "@/utils/enum/EnumSort";
+import {EnumTableName} from "@/utils/enum/EnumTable";
+import {getParams} from "@/lib/supabase/services/method/getParams";
+import {EnumSort} from "@/utils/enum/EnumSort";
+import {supabaseService} from "@/lib/supabase/services/supabase.service";
+import {ICategoryResponse} from "@/redux/services/category/type";
 
 export async function GET(request: Request) {
     try {
@@ -14,9 +15,9 @@ export async function GET(request: Request) {
             userAgent, // ✅ Log user-agent
         });
 
-        const { page, pageSize, search, searchColumn } = getPaginationParams(request);
+        const {page, pageSize, search, searchColumn} = getParams(request);
 
-        const result = await fetchPaginatedData(EnumTableName.Category, {
+        const result = await supabaseService.findMany<ICategoryResponse>(EnumTableName.Category, {
             page,
             pageSize,
             searchColumn,
@@ -27,6 +28,6 @@ export async function GET(request: Request) {
         return Response.json(result);
     } catch (error) {
         console.error("❌ Unexpected error:", error);
-        return Response.json({ error: "Internal Server Error" }, { status: 500 });
+        return Response.json({error: "Internal Server Error"}, {status: 500});
     }
 }

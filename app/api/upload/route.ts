@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import {SupabaseStorageService} from "@/lib/supabase/SupabaseStorageService";
+import {SupabaseStorageService} from "@/lib/supabase/services/SupabaseStorageService";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import {ANY} from "@/utils/commons/type";
 

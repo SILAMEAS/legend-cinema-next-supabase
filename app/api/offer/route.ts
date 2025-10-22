@@ -1,14 +1,15 @@
 import {EnumTableName} from "@/utils/enum/EnumTable";
-import {getPaginationParams} from "@/utils/commons/getPaginationParams";
-import {fetchPaginatedData} from "@/utils/commons/fetchPaginatedData";
+import {getParams} from "@/lib/supabase/services/method/getParams";
+import {supabaseService} from "@/lib/supabase/services/supabase.service";
+import {IOfferResponse} from "@/redux/services/offer/type";
 
 
 export async function GET(request: Request) {
     try {
-        const {page, pageSize, search, orderBy, orderDirection,searchColumn} =
-            getPaginationParams(request);
+        const {page, pageSize, search, orderBy, orderDirection, searchColumn} =
+            getParams(request);
 
-        const result = await fetchPaginatedData(EnumTableName.Offer, {
+        const result = await supabaseService.findMany<IOfferResponse>(EnumTableName.Offer, {
             page,
             pageSize,
             searchColumn,

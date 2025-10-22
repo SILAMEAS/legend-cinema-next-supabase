@@ -1,15 +1,16 @@
 import {EnumTableName} from "@/utils/enum/EnumTable";
-import {getPaginationParams} from "@/utils/commons/getPaginationParams";
-import {fetchPaginatedData} from "@/utils/commons/fetchPaginatedData";
+import {getParams} from "@/lib/supabase/services/method/getParams";
 import {EnumTableColum} from "@/utils/enum/EnumTableColum";
+import {supabaseService} from "@/lib/supabase/services/supabase.service";
+import {IDashboardResponse} from "@/redux/services/dashboard/type";
 
 
 export async function GET(request: Request) {
     try {
-        const {page, pageSize, search, orderBy, orderDirection,searchColumn=EnumTableColum.TITLE} =
-            getPaginationParams(request);
+        const {page, pageSize, search, orderBy, orderDirection, searchColumn = EnumTableColum.TITLE} =
+            getParams(request);
 
-        const result = await fetchPaginatedData(EnumTableName.Dashboard, {
+        const result = await supabaseService.findMany<IDashboardResponse>(EnumTableName.Dashboard, {
             page,
             pageSize,
             searchColumn,

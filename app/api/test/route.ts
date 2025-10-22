@@ -1,15 +1,16 @@
 import {EnumTableName} from "@/utils/enum/EnumTable";
-import {getPaginationParams} from "@/utils/commons/getPaginationParams";
-import {fetchPaginatedData} from "@/utils/commons/fetchPaginatedData";
+import {getParams} from "@/lib/supabase/services/method/getParams";
 import {EnumOperator} from "@/utils/enum/EnumOperator";
+import {supabaseService} from "@/lib/supabase/services/supabase.service";
+import {ICategoryResponse} from "@/redux/services/category/type";
 
 
 export async function GET(request: Request) {
     try {
         const {page, pageSize, search, orderBy, orderDirection, searchColumn} =
-            getPaginationParams(request);
+            getParams(request);
 
-        const result = await fetchPaginatedData(EnumTableName.Category, {
+        const result = await supabaseService.findMany<ICategoryResponse>(EnumTableName.Category, {
             page,
             pageSize,
             searchColumn,

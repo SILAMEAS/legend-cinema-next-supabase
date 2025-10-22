@@ -1,4 +1,4 @@
-import {getSupabaseProfile} from "@/utils/commons/getSupabaseProfile";
+import {profileService} from "@/lib/supabase/services/ProfileService";
 import {EnumTableName} from "@/utils/enum/EnumTable";
 import {IUserRequest} from "@/redux/services/user/type";
 import {createClient} from "@/lib/supabase/server";
@@ -6,7 +6,7 @@ import {createClient} from "@/lib/supabase/server";
 
 export async function GET() {
     try {
-        const result = await getSupabaseProfile();
+        const result = await profileService();
         return Response.json(result);
     } catch (error) {
         console.error("Unexpected error:", error);
