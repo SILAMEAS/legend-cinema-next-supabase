@@ -6,10 +6,11 @@ import Link from "next/link"
 import {DeleteConfirmationModal} from "@/components/admin/delete-confirmation-modal"
 import {Toast} from "@/components/admin/toast"
 import {EnumPage} from "@/utils/enum/EnumPage";
-import {ANY} from "@/utils/commons/type";
+import {ANY, IStatus} from "@/utils/commons/type";
 import Image from "next/image";
 import {EnumTableColum} from "@/utils/enum/EnumTableColum";
 import {useGetMovieQuery} from "@/redux/services/movie/movie";
+import {$ok} from "@/utils/commons/$ok";
 
 export default function MoviesManagement() {
     const [searchQuery, setSearchQuery] = useState("")
@@ -27,9 +28,12 @@ export default function MoviesManagement() {
         null,
     )
     const [editModal, setEditModal] = useState<{ show: boolean; movie: ANY | null }>({show: false, movie: null});
-    const {currentData: movies} = useGetMovieQuery({title:searchQuery,status:filterStatus});
+    const {currentData: movies} = useGetMovieQuery({title: searchQuery, status: filterStatus});
 
-    const handleDeleteClick = (movieId: number, movieTitle: string) => {
+    const handleDeleteClick = (movieId: number | null, movieTitle: string) => {
+        if (!movies) {
+            console.error("No movies found for this page movieId", movieId);
+        }
         setDeleteModal({show: true, movieId, movieTitle})
     }
 
@@ -93,14 +97,16 @@ export default function MoviesManagement() {
                         className="bg-gray-900 rounded-lg shadow-lg border border-gray-800 overflow-hidden hover:border-red-500 transition-colors"
                     >
                         <div className="relative">
-                            <Image fill src={movie[EnumTableColum.IMAGE] || "/placeholder.svg"} alt={movie.title}
+                            <Image fill
+                                   src={$ok(movie[EnumTableColum.IMAGE]) ? movie[EnumTableColum.IMAGE] as string : "/placeholder.svg"}
+                                   alt={movie.title}
                                    className="w-full h-64 object-cover"/>
                             <span
                                 className={`absolute top-2 right-2 px-2 py-1 text-xs font-semibold rounded-full ${
-                                    movie[EnumTableColum.STATUS]?.name === "Now Showing" ? "bg-green-500 text-white" : "bg-blue-500 text-white"
+                                    (movie[EnumTableColum.STATUS] as unknown as IStatus)?.name === "Now Showing" ? "bg-green-500 text-white" : "bg-blue-500 text-white"
                                 }`}
                             >
-                {movie[EnumTableColum.STATUS]?.name}
+                {(movie[EnumTableColum.STATUS] as unknown as IStatus)?.name}
               </span>
                         </div>
                         <div className="p-4">
@@ -124,7 +130,9 @@ export default function MoviesManagement() {
                                     <Eye className="w-4 h-4"/>
                                 </button>
                                 <button
-                                    onClick={() => handleDeleteClick(movie.id, movie.title)}
+                                    onClick={() => {
+                                        handleDeleteClick(movie.id, movie.title)
+                                    }}
                                     className="bg-red-900/30 hover:bg-red-900/50 text-red-500 px-3 py-2 rounded-lg transition-colors border border-red-800"
                                 >
                                     <Trash2 className="w-4 h-4"/>

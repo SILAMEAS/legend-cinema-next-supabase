@@ -88,7 +88,7 @@ export default function Home() {
                                     <MovieCard
                                         key={movie.id}
                                         title={movie.title}
-                                        image={movie.image}
+                                        image={movie.image as string}
                                         rating={movie.rating}
                                         duration={movie.duration}
                                         genre={movie.genre}

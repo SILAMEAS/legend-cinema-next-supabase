@@ -30,5 +30,9 @@ export enum EnumTableColum {
     CINEMA = "cinema",
     CINEMA_NAME = "cinema.name",
     CINEMA_ID = "cinema.id",
-
+    DIRECTOR='director',
+    CAST="cast",
+    SYNOPSIS="synopsis",
+    TRAILER="trailer",
+    FILE='file'
 }
