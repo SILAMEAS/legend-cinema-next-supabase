@@ -6,10 +6,14 @@ import {ArrowLeft} from "lucide-react"
 import Link from "next/link"
 import {EnumPage} from "@/utils/enum/EnumPage";
 import Dropzone from "@/components/dropzone";
-import {IMovieResponse} from "@/redux/services/movie/type";
+import {IMovieResponse, MovieFormData} from "@/redux/services/movie/type";
 import {EnumTableColum} from "@/utils/enum/EnumTableColum";
+import {useCreateMovieMutation} from "@/redux/services/movie/movie";
 
 export default function NewMovie() {
+    /** calling end point*/
+    const [createMovie] = useCreateMovieMutation({});
+    /** state  */
     const [file, setFile] = useState<File | null>(null);
     const [formData, setFormData] = useState<IMovieResponse>({
         [EnumTableColum.ID]:null,
@@ -23,14 +27,17 @@ export default function NewMovie() {
         [EnumTableColum.CAST]: "",
         [EnumTableColum.SYNOPSIS]: "",
         [EnumTableColum.TRAILER]: "",
-        [EnumTableColum.IMAGE]: file
+        [EnumTableColum.IMAGE]: null
     })
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
-        setFormData({...formData,image:file})
-        console.log("[v0] Form submitted:", formData)
-        // Handle form submission
+        setFormData({...formData,image:file});
+        try {
+            await createMovie(MovieFormData(formData)).unwrap();
+        }catch(err) {
+            console.log(err)
+        }
     }
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {

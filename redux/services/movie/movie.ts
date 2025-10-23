@@ -33,7 +33,17 @@ export const movie = createApi({
             }),
             providesTags: ['date_movie'],
         }),
+
+
+        createMovie: builder.mutation<string,FormData>({
+            query: (body) => ({
+                url: `/movie`,
+                method: EnumMethod.POST,
+                body
+            }),
+            invalidatesTags: ['movie'],
+        }),
     }),
 });
 
-export const {useGetMovieQuery,useGetRecentMovieQuery,useGetListDateShowingQuery } = movie;
+export const {useGetMovieQuery,useGetRecentMovieQuery,useGetListDateShowingQuery,useCreateMovieMutation } = movie;

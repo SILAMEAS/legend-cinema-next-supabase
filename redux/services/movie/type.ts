@@ -25,3 +25,21 @@ export interface IMovieRecentResponse{
 export interface ListDateShowingResponse {
     [EnumTableColum.DATE_SHOWING]:string,
 }
+
+export const MovieFormData = (movie: IMovieResponse): FormData => {
+    const fd = new FormData();
+
+    (Object.values(EnumTableColum) as (keyof IMovieResponse)[]).forEach((key) => {
+        const value = movie[key];
+
+        if (value !== null && value !== undefined) {
+            if (value instanceof File) {
+                fd.append(key, value);
+            } else {
+                fd.append(key, String(value));
+            }
+        }
+    });
+
+    return fd;
+};
