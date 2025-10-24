@@ -1,4 +1,4 @@
-import { createClient } from "@/lib/supabase/server";
+import { createServerSupabaseClient } from "@/lib/supabase/server";
 import { EnumTableName } from "@/utils/enum/EnumTable";
 import { EnumPropertyKey } from "@/utils/enum/EnumPropertyKey";
 import { ANY } from "@/utils/commons/type";
@@ -18,7 +18,7 @@ interface Profile {
  * - Returns the user's profile or `null` if unauthorized or not found.
  */
 export async function profileService(): Promise<Profile | null> {
-    const supabase = await createClient();
+    const supabase = await createServerSupabaseClient();
 
     // 🧩 Get authenticated user's claims
     const { data: claimsData, error: claimsError } = await supabase.auth.getClaims();

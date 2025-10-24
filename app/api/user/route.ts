@@ -1,7 +1,7 @@
 import {profileService} from "@/lib/supabase/services/ProfileService";
 import {EnumTableName} from "@/utils/enum/EnumTable";
 import {IUserRequest} from "@/redux/services/user/type";
-import {createClient} from "@/lib/supabase/server";
+import {createServerSupabaseClient} from "@/lib/supabase/server";
 
 
 export async function GET() {
@@ -23,7 +23,7 @@ export async function POST(request: Request) {
         }
 
         const data = body as IUserRequest;
-        const supabase = await createClient();
+        const supabase = await createServerSupabaseClient();
 
         if (data.user) {
             const _email = data.user.email;

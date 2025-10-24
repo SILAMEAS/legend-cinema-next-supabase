@@ -1,4 +1,4 @@
-import { createClient } from "@/lib/supabase/server";
+import { createServerSupabaseClient } from "@/lib/supabase/server";
 import { EnumTableName } from "@/utils/enum/EnumTable";
 import {EnumTableColum} from "@/utils/enum/EnumTableColum";
 import {ANY} from "@/utils/commons/type";
@@ -9,7 +9,7 @@ export async function PUT(
     { params }: ANY
 ) {
     try {
-        const supabase = await createClient();
+        const supabase = await createServerSupabaseClient();
         const id = Number(params.id); // 🔥 get id from route
         const body = await request.json();
 

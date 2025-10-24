@@ -26,6 +26,7 @@ export interface PaginationOptions {
     select?: string;
     filters?: QueryFilter[];
     notNull?: string[];
+    serverTrusted?: boolean;
 }
 
 export interface PaginationResult<T> {
