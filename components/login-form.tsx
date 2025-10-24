@@ -45,7 +45,8 @@ export function LoginForm({
       });
       if (error) throw error;
 
-      await getUser().unwrap().then(user=>dispatch(setUser(user)))
+      await getUser().unwrap().then(user=>dispatch(setUser(user)));
+      router.refresh();
 
       // Update this route to redirect to an authenticated route. The upload already has an active session.
       router.push(EnumPage.ROOT);
