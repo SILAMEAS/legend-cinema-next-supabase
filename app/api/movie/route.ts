@@ -4,11 +4,14 @@ import {EnumTableColum} from "@/utils/enum/EnumTableColum";
 import {EnumRole} from "@/utils/enum/EnumRole";
 import {EnumOperator} from "@/utils/enum/EnumOperator";
 import {supabaseService} from "@/lib/supabase/services/supabase.service";
-import {IMovieResponse} from "@/redux/services/movie/type";
+import {IMovieRequest, IMovieResponse} from "@/redux/services/movie/type";
 import {$ok} from "@/utils/commons/$ok";
 import {profileService} from "@/lib/supabase/services/ProfileService";
 import {parseFormData} from "@/lib/supabase/services/method/parseFormData";
 import {SupabaseStorageService} from "@/lib/supabase/services/SupabaseStorageService";
+import {AccessDeniesException} from "@/lib/supabase/services/exception/AccessDeniesException";
+import {NotFoundException} from "@/lib/supabase/services/exception/NotFoundException";
+import {SuccessException} from "@/lib/supabase/services/exception/SuccessException";
 
 const storageService = new SupabaseStorageService();
 
@@ -85,49 +88,37 @@ export async function POST(request: Request) {
         /** get body from request passing to formdata */
         const formData = await request.formData();
 
-        const keys = Object.values(EnumTableColum) as (keyof IMovieResponse)[];
+        const keys = Object.values(EnumTableColum) as (keyof IMovieRequest)[];
 
-        const movieData = parseFormData<IMovieResponse>(formData, keys);
+        const movieData = parseFormData<IMovieRequest>(formData, keys);
 
         /** get user from redux that already store on layout **/
         const user = await profileService();
         /** checking role */
         if (user?.role !== EnumRole.ADMIN) {
-            return Response.json({
-                status: 401,
-                message: "Access denied",
-            });
+            return AccessDeniesException()
         }
         /** checking image */
-        if(!movieData[EnumTableColum.IMAGE]){
-            return Response.json({
-                status: 400,
-                message: "File Not Found",
-            })
-
+        if (!movieData[EnumTableColum.IMAGE]) {
+            return NotFoundException({message: "File not found"});
         }
         /** upload file to Storage  **/
-        const image = await storageService.uploadFile(movieData[EnumTableColum.IMAGE] as File).then(r=>r.url);
-        formData.append("image", image);
-        console.log("movieData",movieData);
+        await storageService.uploadFile(movieData[EnumTableColum.IMAGE]).then(r => r).then(img => formData.append("image", img.url));
         const object = Object.fromEntries(formData.entries());
-        console.log("object",object);
+        console.log("object", object);
         /** create new movie */
-        const movie = await supabaseService.create<IMovieResponse>({
-            tableName:EnumTableName.Movie,
+        await supabaseService.create<IMovieRequest>({
+            tableName: EnumTableName.Movie,
             data: object,
-            select:select.join(","),
+            select: select.join(","),
         });
-        console.log("movie",movie);
-
+        return SuccessException({
+            message: "Create Movie Success"
+        })
         /** add more column release if user role is ADMIN */
         /** add filter before display  */
         /** show only name,id for list cinema for choosing */
 
-        return Response.json({
-            status: 200,
-            message: "success creation movie",
-        });
     } catch (error) {
         console.error("Unexpected error:", error);
         return Response.json({error: "Internal Server Error"}, {status: 500});

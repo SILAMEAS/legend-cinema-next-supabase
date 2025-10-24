@@ -34,5 +34,10 @@ export enum EnumTableColum {
     CAST="cast",
     SYNOPSIS="synopsis",
     TRAILER="trailer",
-    FILE='file'
+    FILE='file',
+    MOVIE_STATUS = "movie_status",
+}
+export enum EnumSupabseColumn{
+    CINEMA_ID = "cinema_id",
+    MOVIE_STATUS_ID = "movie_status_id",
 }

@@ -1,15 +1,18 @@
-import React, { useState, DragEvent, ChangeEvent } from "react";
+import React, { DragEvent, ChangeEvent, useState, useId } from "react";
 import { Upload } from "lucide-react";
 
 interface DropzoneProps {
-    file:File | null,
-    setFile: React.Dispatch<React.SetStateAction<File | null>>,
-    inputProps: React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>
+    file: File | null;
+    setFile: (file: File | null) => void;
+    inputProps?: React.DetailedHTMLProps<
+        React.InputHTMLAttributes<HTMLInputElement>,
+        HTMLInputElement
+    >;
 }
 
-const Dropzone = ({file,inputProps,setFile}:DropzoneProps) => {
-
+const Dropzone: React.FC<DropzoneProps> = ({ file, setFile, inputProps }) => {
     const [isDragging, setIsDragging] = useState(false);
+    const inputId = useId(); // ensures unique ID for accessibility & multiple instances
 
     const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
         const selectedFile = e.target.files?.[0];
@@ -30,6 +33,11 @@ const Dropzone = ({file,inputProps,setFile}:DropzoneProps) => {
 
     const handleDragLeave = () => setIsDragging(false);
 
+    const handleClick = () => {
+        const inputEl = document.getElementById(inputId) as HTMLInputElement | null;
+        inputEl?.click();
+    };
+
     return (
         <div className="md:col-span-2">
             <label className="block text-sm font-medium text-white mb-2">
@@ -43,7 +51,7 @@ const Dropzone = ({file,inputProps,setFile}:DropzoneProps) => {
                 onDrop={handleDrop}
                 onDragOver={handleDragOver}
                 onDragLeave={handleDragLeave}
-                onClick={() => document.getElementById("fileInput")?.click()}
+                onClick={handleClick}
             >
                 <Upload className="w-12 h-12 text-gray-400 mx-auto mb-2" />
                 <p className="text-sm text-white">
@@ -52,7 +60,7 @@ const Dropzone = ({file,inputProps,setFile}:DropzoneProps) => {
                 <p className="text-xs text-white mt-1">PNG, JPG up to 10MB</p>
 
                 <input
-                    id="fileInput"
+                    id={inputId}
                     type="file"
                     accept="image/png, image/jpeg"
                     className="hidden"
