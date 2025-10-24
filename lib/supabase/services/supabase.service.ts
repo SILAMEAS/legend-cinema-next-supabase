@@ -86,7 +86,7 @@ export class SupabaseService {
             select,
             filters = [],
             notNull = [],
-            serverTrusted = false
+            serverTrusted=false
         } = options;
 
         const from = (page - 1) * pageSize;

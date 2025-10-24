@@ -12,7 +12,6 @@ import {EnumTableColum} from "@/utils/enum/EnumTableColum";
 
 export default function BannersManagement() {
     const {currentData}=useGetBannerQuery();
-    console.log("currentData",currentData)
     const [banners, setBanners] = useState<Array<IBannerResponse>>([]);
     const [updateBanners] = useUpdateBannerMutation();
     useEffect(() => {

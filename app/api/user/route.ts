@@ -1,8 +1,7 @@
-import {profileService} from "@/lib/supabase/services/ProfileService";
+import {supabaseService} from "@/lib/supabase/services/supabase.service";
 import {EnumTableName} from "@/utils/enum/EnumTable";
 import {IUserRequest} from "@/redux/services/user/type";
-import {createServerSupabaseClient} from "@/lib/supabase/server";
-
+import {profileService} from "@/lib/supabase/services/ProfileService";
 
 export async function GET() {
     try {
@@ -16,39 +15,37 @@ export async function GET() {
 
 export async function POST(request: Request) {
     try {
-        const body = await request.json(); // Parse JSON body
+        const body = await request.json();
 
         if (!body) {
-            return new Response(JSON.stringify({error: "Request body is missing"}), {status: 400});
+            return Response.json({error: "Request body is missing"}, {status: 400});
         }
 
         const data = body as IUserRequest;
-        const supabase = await createServerSupabaseClient();
 
         if (data.user) {
             const _email = data.user.email;
 
-            const {error: insertError} = await supabase
-                .from(EnumTableName.Profile)
-                .insert([
-                    {
-                        email: _email,
-                        name: _email?.slice(0, 5),
-                        user_id: data.user.id,
-                    },
-                ])
-                .select();
+            const insertResult = await supabaseService.create({
+                tableName: EnumTableName.Profile,
+                data: {
+                    email: _email,
+                    name: _email?.slice(0, 5),
+                    user_id: data.user.id,
+                },
+                serverTrusted: true, // use service role client
+            });
 
-            if (insertError) {
-                return new Response(JSON.stringify({error: insertError.message}), {status: 500});
+            if (insertResult.error) {
+                return Response.json({error: insertResult.error}, {status: 500});
             }
 
-            return new Response(JSON.stringify({message: "Created User Successfully"}), {status: 201});
+            return Response.json({message: "Created User Successfully", data: insertResult.data}, {status: 201});
         }
 
-        return new Response(JSON.stringify({error: "User data is missing"}), {status: 400});
+        return Response.json({error: "User data is missing"}, {status: 400});
     } catch (error) {
         console.error("Unexpected error:", error);
-        return new Response(JSON.stringify({error: "Internal Server Error"}), {status: 500});
+        return Response.json({error: "Internal Server Error"}, {status: 500});
     }
 }
