@@ -9,7 +9,7 @@ interface DeleteConfirmationModalProps {
     onCancel: () => void
 }
 
-export function DeleteConfirmationModal({ title, message, onConfirm, onCancel }: DeleteConfirmationModalProps) {
+export function DeleteConfirmationModal({ title, message, onConfirm, onCancel }: Readonly<DeleteConfirmationModalProps>) {
     return (
         <div className="fixed inset-0 bg-black/70 flex items-center justify-center p-4 z-50 backdrop-blur-sm">
             <div className="bg-gray-800 rounded-lg shadow-2xl max-w-md w-full border border-gray-700">

@@ -14,6 +14,8 @@ export interface IMovieResponse {
     [EnumTableColum.DIRECTOR]: string,
     [EnumTableColum.CAST]: string,
     [EnumTableColum.SYNOPSIS]: string,
+    [EnumTableColum.TRAILER]:string,
+    [EnumTableColum.CINEMA]: IStatus,
 }
 
 export interface IMovieRecentResponse {

@@ -1,20 +1,18 @@
-"use client"
-
-import React from "react"
-import Link from "next/link"
-import {Controller, useForm} from "react-hook-form"
-import {ArrowLeft} from "lucide-react"
-import {EnumPage} from "@/utils/enum/EnumPage"
-import Dropzone from "@/components/dropzone"
-import {ConvertFromObjToFormData, IMovieRequest} from "@/redux/services/movie/type"
-import {EnumSupabseColumn, EnumTableColum} from "@/utils/enum/EnumTableColum"
-import {useCreateMovieMutation, useGetMovieStatusQuery} from "@/redux/services/movie/movie"
+import React from 'react';
+import {IEditMovieModalProps} from "@/utils/commons/type";
+import {Controller, useForm} from "react-hook-form";
+import {EnumSupabseColumn, EnumTableColum} from "@/utils/enum/EnumTableColum";
+import {ConvertFromObjToFormData, IMovieRequest} from "@/redux/services/movie/type";
+import Dropzone from "@/components/dropzone";
+import {useCreateMovieMutation, useGetMovieStatusQuery} from "@/redux/services/movie/movie";
 import {useGetCinemaQuery} from "@/redux/services/cinema/cinema";
+import Image from "next/image";
+import {$ok} from "@/utils/commons/$ok";
 
-export default function NewMovie() {
+const CreateEditMovieModal = ({editModal, setEditModal, setToast}: IEditMovieModalProps) => {
     const {data: statuses} = useGetMovieStatusQuery();
     const [createMovie] = useCreateMovieMutation();
-    const {data: cinemas} = useGetCinemaQuery()
+    const {data: cinemas} = useGetCinemaQuery();
 
     const {
         register,
@@ -22,23 +20,27 @@ export default function NewMovie() {
         control,
         reset,
         formState: {errors},
-        watch,
+        watch
     } = useForm<IMovieRequest>({
         defaultValues: {
-            [EnumTableColum.TITLE]: "",
-            [EnumTableColum.GENRE]: "",
-            [EnumTableColum.DURATION]: "",
-            [EnumTableColum.RATING]: "",
-            [EnumTableColum.RELEASE_DATE]: "",
-            [EnumTableColum.DIRECTOR]: "",
-            [EnumTableColum.CAST]: "",
-            [EnumTableColum.SYNOPSIS]: "",
-            [EnumTableColum.TRAILER]: "",
-            [EnumTableColum.IMAGE]: null,
-            [EnumSupabseColumn.CINEMA_ID]: null,
-            [EnumSupabseColumn.MOVIE_STATUS_ID]: null
+            [EnumTableColum.TITLE]:editModal?.movie?.title?? "",
+            [EnumTableColum.GENRE]:editModal?.movie?.genre ?? "",
+            [EnumTableColum.DURATION]: editModal?.movie?.duration ?? "",
+            [EnumTableColum.RATING]: editModal?.movie?.rating ?? "",
+            [EnumTableColum.RELEASE_DATE]: editModal?.movie?.releaseDate
+                ? new Date(editModal.movie.releaseDate).toISOString().split("T")[0]
+                : "",
+
+            [EnumTableColum.DIRECTOR]: editModal?.movie?.director ?? "",
+            [EnumTableColum.CAST]: editModal?.movie?.cast ?? "",
+            [EnumTableColum.SYNOPSIS]: editModal?.movie?.synopsis ?? "",
+            [EnumTableColum.TRAILER]: editModal?.movie?.trailer ?? "",
+            [EnumTableColum.IMAGE]:  $ok(editModal?.movie?.image) ?editModal?.movie?.image as File : null,
+            [EnumSupabseColumn.CINEMA_ID]: $ok(editModal?.movie?.cinema?.id) ? Number(editModal?.movie?.cinema?.id) : null,
+            [EnumSupabseColumn.MOVIE_STATUS_ID]:  $ok(editModal?.movie?.status?.id) ? Number(editModal?.movie?.cinema?.id) : null
         },
     })
+    console.log(watch(EnumTableColum.RELEASE_DATE))
 
     const onSubmit = async (data: IMovieRequest) => {
         try {
@@ -46,30 +48,48 @@ export default function NewMovie() {
                 console.error("File not found")
                 return
             }
-            await createMovie(ConvertFromObjToFormData(data)).unwrap().then(() => {
-                reset()
-            })
+            if (editModal?.movie) {
+                console.log("updating movie ", editModal?.movie)
+            } else {
+                await createMovie(ConvertFromObjToFormData(data)).unwrap().then(() => {
+                    setToast({show: true, message: "Movie created successfully!", type: "success"})
+                    setEditModal({show: false})
+                    reset()
+                })
+            }
         } catch (err) {
             console.error(err)
         }
     }
+    const previewImage = watch(EnumTableColum.IMAGE);
     return (
-        <div className="space-y-6">
-            {/* Header */}
-            <div className="flex items-center gap-4">
-                <Link href={EnumPage.ADMIN_MOVIES}
-                      className="p-2 hover:bg-gray-700 rounded-lg transition-colors text-white">
-                    <ArrowLeft className="w-5 h-5"/>
-                </Link>
-                <div className={'text-white'}>
-                    <h1 className="text-2xl font-bold ">Add New Movie</h1>
-                    <p className="text-white mt-1">Fill in the movie details</p>
-                </div>
-            </div>
-
+        <div
+            className="fixed inset-0 bg-black/70 flex items-center justify-center p-4 z-50 backdrop-blur-sm overflow-y-auto">
             {/* Form */}
             <form onSubmit={handleSubmit(onSubmit)}
                   className="bg-gray-900 rounded-lg shadow-md border border-gray-200 p-6 w-[50%]">
+                {/* TITLE of Modal */}
+                <div className="p-6 border-b border-gray-800 flex items-center justify-between">
+                    <h2 className="text-xl font-bold text-white">{`${editModal?.movie ? `Editing Movie  (${editModal?.movie[EnumTableColum.TITLE]})` : "Create New Movie"}`}
+                    </h2>
+                    <div>
+                        {$ok(previewImage) && (
+                            <Image
+                                src={
+                                    previewImage instanceof File
+                                        ? URL.createObjectURL(previewImage)
+                                        : typeof previewImage === "string"
+                                            ? previewImage
+                                            : ""
+                                }
+                                alt={(previewImage ??'Preview') as string}
+                                width={100}
+                                height={100}
+                                className="rounded-sm"
+                            />
+                        )}
+                    </div>
+                </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     {/* Dropzone */}
                     <Controller
@@ -235,18 +255,21 @@ export default function NewMovie() {
                 <div className="flex gap-4 mt-6">
                     <button
                         type="submit"
-                        className={` text-white px-6 py-2 rounded-lg transition-colors ${!watch(EnumTableColum.IMAGE) ? "bg-gray-700" : "bg-red-600 hover:bg-red-700"}`}
+                        className="bg-red-600 hover:bg-red-700 text-white px-6 py-2.5 rounded-lg font-medium transition-colors"
                     >
-                        Add Movie
+                        Save Changes
                     </button>
-                    <Link
-                        href={EnumPage.ADMIN_MOVIES}
-                        className="bg-gray-200 hover:bg-gray-300 text-gray-700 px-6 py-2 rounded-lg transition-colors"
+                    <button
+                        type="button"
+                        onClick={() => setEditModal({show: false})}
+                        className="bg-gray-800 hover:bg-gray-700 text-white px-6 py-2.5 rounded-lg font-medium transition-colors border border-gray-700"
                     >
                         Cancel
-                    </Link>
+                    </button>
                 </div>
             </form>
         </div>
     )
-}
+};
+
+export default CreateEditMovieModal;

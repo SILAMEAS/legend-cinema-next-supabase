@@ -39,7 +39,15 @@ export async function GET(request: Request) {
         const notNull = [];
         /** add more column release if user role is ADMIN */
         if (user?.role === EnumRole.ADMIN) {
-            select.push(EnumTableColum.RELEASE_DATE)
+            const AdminSelectMore = [
+                EnumTableColum.RELEASE_DATE,
+                EnumTableColum.DIRECTOR,
+                EnumTableColum.CAST,
+                EnumTableColum.DIRECTOR,
+                EnumTableColum.TRAILER,
+                EnumTableColum.SYNOPSIS
+            ]
+            select.push([...AdminSelectMore].join(","))
         }
 
         /** add filter before display  */
