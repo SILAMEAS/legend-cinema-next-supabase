@@ -26,3 +26,10 @@ export const compareDate = ({dateInput1,dateInput2}:{dateInput1:string,dateInput
         date1.getMonth() === date2.getMonth() &&
         date1.getDate() === date2.getDate();
 };
+export const fromDateToStartEndDate=(date:string)=>{
+    const startOfDay = new Date(date);
+    startOfDay.setHours(0, 0, 0, 0);
+    const endOfDay = new Date(date);
+    endOfDay.setHours(23, 59, 59, 999);
+    return {startOfDay:startOfDay.toISOString(),endOfDay:endOfDay.toISOString()}
+}

@@ -3,5 +3,6 @@ export enum EnumMethod{
     POST="POST",
     UPDATE="UPDATE",
     INSERT="INSERT",
-    DELETE="DELETE"
+    DELETE="DELETE",
+    PUT="PUT"
 }

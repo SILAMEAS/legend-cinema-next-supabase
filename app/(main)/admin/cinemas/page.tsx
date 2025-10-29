@@ -6,8 +6,9 @@ import { useState } from "react"
 import { Plus, Edit, Trash2, MapPin, Phone, Clock } from "lucide-react"
 import { DeleteConfirmationModal } from "@/components/admin/delete-confirmation-modal"
 import { Toast } from "@/components/admin/toast"
-import {ANY, IDeleteCinemaModal, IToast} from "@/utils/commons/type";
+import {ANY, IToast} from "@/utils/commons/type";
 import CreateCinemaModal from "@/components/admin/cinema/create-cinema-modal";
+import {IDeleteCinemaModal} from "@/redux/services/cinema/type";
 
 export default function CinemasManagement() {
     const [cinemas, setCinemas] = useState([

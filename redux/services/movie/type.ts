@@ -1,5 +1,6 @@
 import {EnumSupabseColumn, EnumTableColum} from "@/utils/enum/EnumTableColum";
-import {ANY, IStatus} from "@/utils/commons/type";
+import {ANY, IStatus, IToast} from "@/utils/commons/type";
+import {Dispatch, SetStateAction} from "react";
 
 export interface IMovieResponse {
     [EnumTableColum.ID]: number | null,
@@ -62,6 +63,7 @@ export const ConvertFromObjToFormData = <T extends Record<string, ANY>>(data: T)
 
 
 export interface IMovieRequest {
+    [EnumTableColum.ID]: number | null,
     [EnumTableColum.IMAGE]: File|null,
     [EnumTableColum.TITLE]: string,
     [EnumTableColum.GENRE]: string,
@@ -75,4 +77,15 @@ export interface IMovieRequest {
 
     [EnumSupabseColumn.MOVIE_STATUS_ID]: number|null;
     [EnumSupabseColumn.CINEMA_ID]: number|null;
+}
+
+export interface IDeleteMovieModal{ show: boolean; movieId: number | null; movieTitle: string }
+export interface IEditMovieModal {
+    show: boolean;
+    movie?: IMovieResponse
+}
+export interface IEditMovieModalProps {
+    editModal: IEditMovieModal,
+    setEditModal: Dispatch<SetStateAction<IEditMovieModal>>,
+    setToast: Dispatch<SetStateAction<IToast | null>>
 }

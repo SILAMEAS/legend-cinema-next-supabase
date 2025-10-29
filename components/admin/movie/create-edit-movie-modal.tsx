@@ -1,17 +1,17 @@
 import React from 'react';
-import {IEditMovieModalProps} from "@/utils/commons/type";
 import {Controller, useForm} from "react-hook-form";
 import {EnumSupabseColumn, EnumTableColum} from "@/utils/enum/EnumTableColum";
-import {ConvertFromObjToFormData, IMovieRequest} from "@/redux/services/movie/type";
+import {ConvertFromObjToFormData, IEditMovieModalProps, IMovieRequest} from "@/redux/services/movie/type";
 import Dropzone from "@/components/dropzone";
-import {useCreateMovieMutation, useGetMovieStatusQuery} from "@/redux/services/movie/movie";
+import {useCreateUpdateMovieMutation, useGetMovieStatusQuery} from "@/redux/services/movie/movie";
 import {useGetCinemaQuery} from "@/redux/services/cinema/cinema";
-import Image from "next/image";
 import {$ok} from "@/utils/commons/$ok";
+import {EnumMethod} from "@/utils/enum/EnumMethod";
+import RenderImage from "@/components/RenderImage";
 
 const CreateEditMovieModal = ({editModal, setEditModal, setToast}: IEditMovieModalProps) => {
     const {data: statuses} = useGetMovieStatusQuery();
-    const [createMovie] = useCreateMovieMutation();
+    const [createUpdateMovie] = useCreateUpdateMovieMutation();
     const {data: cinemas} = useGetCinemaQuery();
 
     const {
@@ -23,8 +23,9 @@ const CreateEditMovieModal = ({editModal, setEditModal, setToast}: IEditMovieMod
         watch
     } = useForm<IMovieRequest>({
         defaultValues: {
-            [EnumTableColum.TITLE]:editModal?.movie?.title?? "",
-            [EnumTableColum.GENRE]:editModal?.movie?.genre ?? "",
+            [EnumTableColum.ID]: editModal?.movie?.id ?? null,
+            [EnumTableColum.TITLE]: editModal?.movie?.title ?? "",
+            [EnumTableColum.GENRE]: editModal?.movie?.genre ?? "",
             [EnumTableColum.DURATION]: editModal?.movie?.duration ?? "",
             [EnumTableColum.RATING]: editModal?.movie?.rating ?? "",
             [EnumTableColum.RELEASE_DATE]: editModal?.movie?.releaseDate
@@ -35,28 +36,32 @@ const CreateEditMovieModal = ({editModal, setEditModal, setToast}: IEditMovieMod
             [EnumTableColum.CAST]: editModal?.movie?.cast ?? "",
             [EnumTableColum.SYNOPSIS]: editModal?.movie?.synopsis ?? "",
             [EnumTableColum.TRAILER]: editModal?.movie?.trailer ?? "",
-            [EnumTableColum.IMAGE]:  $ok(editModal?.movie?.image) ?editModal?.movie?.image as File : null,
+            [EnumTableColum.IMAGE]: $ok(editModal?.movie?.image) ? editModal?.movie?.image as File : null,
             [EnumSupabseColumn.CINEMA_ID]: $ok(editModal?.movie?.cinema?.id) ? Number(editModal?.movie?.cinema?.id) : null,
-            [EnumSupabseColumn.MOVIE_STATUS_ID]:  $ok(editModal?.movie?.status?.id) ? Number(editModal?.movie?.cinema?.id) : null
+            [EnumSupabseColumn.MOVIE_STATUS_ID]: $ok(editModal?.movie?.status?.id) ? Number(editModal?.movie?.cinema?.id) : null
         },
     })
-    console.log(watch(EnumTableColum.RELEASE_DATE))
-
+    const closeMovieModal = () => {
+        setEditModal({show: false})
+        reset()
+    }
     const onSubmit = async (data: IMovieRequest) => {
         try {
             if (!data.image) {
                 console.error("File not found")
                 return
             }
-            if (editModal?.movie) {
-                console.log("updating movie ", editModal?.movie)
-            } else {
-                await createMovie(ConvertFromObjToFormData(data)).unwrap().then(() => {
-                    setToast({show: true, message: "Movie created successfully!", type: "success"})
-                    setEditModal({show: false})
-                    reset()
+            await createUpdateMovie({
+                formData: ConvertFromObjToFormData(data),
+                method: editModal?.movie?.id ? EnumMethod.PUT : EnumMethod.POST
+            }).unwrap().then(() => {
+                setToast({
+                    show: true,
+                    message: `Movie ${editModal?.movie?.id ? "updated" : "created"} successfully!`,
+                    type: "success"
                 })
-            }
+                closeMovieModal()
+            })
         } catch (err) {
             console.error(err)
         }
@@ -72,32 +77,24 @@ const CreateEditMovieModal = ({editModal, setEditModal, setToast}: IEditMovieMod
                 <div className="p-6 border-b border-gray-800 flex items-center justify-between">
                     <h2 className="text-xl font-bold text-white">{`${editModal?.movie ? `Editing Movie  (${editModal?.movie[EnumTableColum.TITLE]})` : "Create New Movie"}`}
                     </h2>
-                    <div>
-                        {$ok(previewImage) && (
-                            <Image
-                                src={
-                                    previewImage instanceof File
-                                        ? URL.createObjectURL(previewImage)
-                                        : typeof previewImage === "string"
-                                            ? previewImage
-                                            : ""
-                                }
-                                alt={(previewImage ??'Preview') as string}
-                                width={100}
-                                height={100}
-                                className="rounded-sm"
-                            />
-                        )}
-                    </div>
+                    {
+                        previewImage &&
+                        <RenderImage src={previewImage} alt={`RenderImage previewImage`}/>
+                    }
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     {/* Dropzone */}
                     <Controller
-                        name="image"
+                        name={EnumTableColum.IMAGE}
                         control={control}
                         render={({field}) => (
                             <Dropzone
-                                inputProps={{type: "file", ...register(EnumTableColum.IMAGE, {required: "Image is required"})}}
+                                inputProps={{
+                                    type: "file",
+                                    ...register(EnumTableColum.IMAGE, {
+                                        required: editModal?.movie?.id ? false : "Image is required", // ✅ only require if creating
+                                    }),
+                                }}
                                 setFile={(file: File | null) => field.onChange(file)}
                                 file={field.value}
                             />
@@ -257,11 +254,11 @@ const CreateEditMovieModal = ({editModal, setEditModal, setToast}: IEditMovieMod
                         type="submit"
                         className="bg-red-600 hover:bg-red-700 text-white px-6 py-2.5 rounded-lg font-medium transition-colors"
                     >
-                        Save Changes
+                        {`${editModal?.movie?.id ? "Update Movie" : "Create Movie"}`}
                     </button>
                     <button
                         type="button"
-                        onClick={() => setEditModal({show: false})}
+                        onClick={closeMovieModal}
                         className="bg-gray-800 hover:bg-gray-700 text-white px-6 py-2.5 rounded-lg font-medium transition-colors border border-gray-700"
                     >
                         Cancel

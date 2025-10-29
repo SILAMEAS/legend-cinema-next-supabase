@@ -9,3 +9,21 @@ export interface ICinemaResponse extends baseColumn{
     [EnumTableColum.HOURS]:string,
     [EnumTableColum.ACTIVE]:boolean
 }
+
+export interface IDeleteCinemaModal {
+    show: boolean;
+    cinemaId: number | null;
+    cinemaName: string
+}
+
+export interface IModalCreateCinemaFormData {
+    name: string,
+    address: string,
+    phone: string,
+    email: string,
+    hours: string,
+    screens: string,
+    seats: string,
+    facilities: Array<string>,
+}
+

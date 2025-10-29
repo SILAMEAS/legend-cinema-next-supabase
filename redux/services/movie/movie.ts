@@ -35,11 +35,11 @@ export const movie = createApi({
         }),
 
 
-        createMovie: builder.mutation<string,FormData>({
-            query: (body) => ({
+        createUpdateMovie: builder.mutation<string, { formData: FormData; method?: EnumMethod }>({
+            query: ({ formData, method = EnumMethod.POST }) => ({
                 url: `/movie`,
-                method: EnumMethod.POST,
-                body
+                method,
+                body: formData,
             }),
             invalidatesTags: ['movie'],
         }),
@@ -54,4 +54,4 @@ export const movie = createApi({
     }),
 });
 
-export const {useGetMovieQuery,useGetRecentMovieQuery,useGetListDateShowingQuery,useCreateMovieMutation ,useGetMovieStatusQuery} = movie;
+export const {useGetMovieQuery,useGetRecentMovieQuery,useGetListDateShowingQuery ,useCreateUpdateMovieMutation,useGetMovieStatusQuery} = movie;

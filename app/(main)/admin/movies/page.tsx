@@ -1,22 +1,21 @@
 "use client"
 
-import {useState} from "react"
+import React, {useState} from "react"
 import {Edit, Eye, Plus, Search, Trash2} from "lucide-react"
 import {DeleteConfirmationModal} from "@/components/admin/delete-confirmation-modal"
 import {Toast} from "@/components/admin/toast"
-import {IEditMovieModal, IStatus, IToast} from "@/utils/commons/type";
-import Image from "next/image";
+import {IStatus, IToast} from "@/utils/commons/type";
 import {EnumTableColum} from "@/utils/enum/EnumTableColum";
 import {useGetMovieQuery} from "@/redux/services/movie/movie";
-import {$ok} from "@/utils/commons/$ok";
 import CreateEditMovieModal from "@/components/admin/movie/create-edit-movie-modal";
 import {Button} from "@/components/ui/button";
-import {IMovieResponse} from "@/redux/services/movie/type";
+import {IDeleteMovieModal, IEditMovieModal, IMovieResponse} from "@/redux/services/movie/type";
+import RenderImage from "@/components/RenderImage";
 
 export default function MoviesManagement() {
     const [searchQuery, setSearchQuery] = useState("")
     const [filterStatus, setFilterStatus] = useState("all")
-    const [deleteModal, setDeleteModal] = useState<{ show: boolean; movieId: number | null; movieTitle: string }>({
+    const [deleteModal, setDeleteModal] = useState<IDeleteMovieModal>({
         show: false,
         movieId: null,
         movieTitle: "",
@@ -94,10 +93,10 @@ export default function MoviesManagement() {
                         className="bg-gray-900 rounded-lg shadow-lg border border-gray-800 overflow-hidden hover:border-red-500 transition-colors"
                     >
                         <div className="relative">
-                            <Image fill
-                                   src={$ok(movie[EnumTableColum.IMAGE]) ? movie[EnumTableColum.IMAGE] as string : "/placeholder.svg"}
-                                   alt={movie.title}
-                                   className="w-full h-64 object-cover"/>
+                            {
+                                movie[EnumTableColum.IMAGE]&&
+                                <RenderImage src={movie[EnumTableColum.IMAGE]} alt={movie[EnumTableColum.IMAGE] as string}/>
+                            }
                             <span
                                 className={`absolute top-2 right-2 px-2 py-1 text-xs font-semibold rounded-full ${
                                     (movie[EnumTableColum.STATUS] as unknown as IStatus)?.name === "Now Showing" ? "bg-green-500 text-white" : "bg-blue-500 text-white"

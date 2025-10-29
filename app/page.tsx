@@ -25,7 +25,7 @@ export default function Home() {
     /** state */
     const [selectedDate, setSelectedDate] = useState<string|undefined>(undefined);
     const cinemaId=cinema?.selected?.split("_")[0]??undefined;
-    const { data: movies, isLoading: moviesLoading } = useGetMovieQuery(
+    const { data: movies, isLoading: moviesLoading,isFetching:movieFetching } = useGetMovieQuery(
         {
             search: movieRedux?.search,
             searchColumn: EnumTableColum.TITLE,
@@ -33,7 +33,7 @@ export default function Home() {
             cinemaId:cinemaId,
         },
         {
-            refetchOnMountOrArgChange: false,
+            refetchOnMountOrArgChange: true,
             refetchOnReconnect: false,
             refetchOnFocus: false,
             skip: !selectedDate, // prevent fetch until date ready
@@ -83,7 +83,7 @@ export default function Home() {
                     <div
                         className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 md:gap-6">
                         {
-                            moviesLoading ? <LoadingSkeleton ArrayLength={9}/> :
+                           ( moviesLoading||movieFetching) ? <LoadingSkeleton ArrayLength={8}/> :
                                 movies?.contents?.map((movie) => (
                                     <MovieCard
                                         key={movie.id}

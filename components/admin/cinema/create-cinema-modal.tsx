@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
-import {IModalCreateCinemaFormData, IToast} from "@/utils/commons/type";
+import { IToast} from "@/utils/commons/type";
+import {IModalCreateCinemaFormData} from "@/redux/services/cinema/type";
 
 interface IModalCreateCinema {
     setToast: React.Dispatch<React.SetStateAction<IToast | null>>,

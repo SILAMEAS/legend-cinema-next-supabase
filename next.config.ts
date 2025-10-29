@@ -8,6 +8,7 @@ const nextConfig: NextConfig = {
             "image.tmdb.org",
             "images.unsplash.com",
             "uxhbvygzxrupbrezyatn.supabase.co", // ✅ only hostname
+            "imgs.search.brave.com"
         ],
     },
 };
