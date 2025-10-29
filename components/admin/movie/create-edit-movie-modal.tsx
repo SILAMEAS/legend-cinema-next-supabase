@@ -1,14 +1,28 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {Controller, useForm} from "react-hook-form";
 import {EnumSupabseColumn, EnumTableColum} from "@/utils/enum/EnumTableColum";
 import {ConvertFromObjToFormData, IEditMovieModalProps, IMovieRequest} from "@/redux/services/movie/type";
 import Dropzone from "@/components/dropzone";
 import {useCreateUpdateMovieMutation, useGetMovieStatusQuery} from "@/redux/services/movie/movie";
 import {useGetCinemaQuery} from "@/redux/services/cinema/cinema";
-import {$ok} from "@/utils/commons/$ok";
 import {EnumMethod} from "@/utils/enum/EnumMethod";
 import RenderImage from "@/components/RenderImage";
 
+const defaultValues: IMovieRequest = {
+    [EnumTableColum.ID]: null,
+    [EnumTableColum.TITLE]: "",
+    [EnumTableColum.GENRE]: "",
+    [EnumTableColum.DURATION]: "",
+    [EnumTableColum.RATING]: "",
+    [EnumTableColum.RELEASE_DATE]: "",
+    [EnumTableColum.DIRECTOR]: "",
+    [EnumTableColum.CAST]: "",
+    [EnumTableColum.SYNOPSIS]: "",
+    [EnumTableColum.TRAILER]: "",
+    [EnumTableColum.IMAGE]: null,
+    [EnumSupabseColumn.CINEMA_ID]: null,
+    [EnumSupabseColumn.MOVIE_STATUS_ID]: null,
+};
 const CreateEditMovieModal = ({editModal, setEditModal, setToast}: IEditMovieModalProps) => {
     const {data: statuses} = useGetMovieStatusQuery();
     const [createUpdateMovie] = useCreateUpdateMovieMutation();
@@ -22,25 +36,38 @@ const CreateEditMovieModal = ({editModal, setEditModal, setToast}: IEditMovieMod
         formState: {errors},
         watch
     } = useForm<IMovieRequest>({
-        defaultValues: {
-            [EnumTableColum.ID]: editModal?.movie?.id ?? null,
-            [EnumTableColum.TITLE]: editModal?.movie?.title ?? "",
-            [EnumTableColum.GENRE]: editModal?.movie?.genre ?? "",
-            [EnumTableColum.DURATION]: editModal?.movie?.duration ?? "",
-            [EnumTableColum.RATING]: editModal?.movie?.rating ?? "",
-            [EnumTableColum.RELEASE_DATE]: editModal?.movie?.releaseDate
-                ? new Date(editModal.movie.releaseDate).toISOString().split("T")[0]
-                : "",
-
-            [EnumTableColum.DIRECTOR]: editModal?.movie?.director ?? "",
-            [EnumTableColum.CAST]: editModal?.movie?.cast ?? "",
-            [EnumTableColum.SYNOPSIS]: editModal?.movie?.synopsis ?? "",
-            [EnumTableColum.TRAILER]: editModal?.movie?.trailer ?? "",
-            [EnumTableColum.IMAGE]: $ok(editModal?.movie?.image) ? editModal?.movie?.image as File : null,
-            [EnumSupabseColumn.CINEMA_ID]: $ok(editModal?.movie?.cinema?.id) ? Number(editModal?.movie?.cinema?.id) : null,
-            [EnumSupabseColumn.MOVIE_STATUS_ID]: $ok(editModal?.movie?.status?.id) ? Number(editModal?.movie?.cinema?.id) : null
-        },
+        defaultValues
     })
+
+    // ✅ Sync form values whenever movie changes
+    useEffect(() => {
+        if (editModal?.movie && cinemas?.contents && statuses?.contents) {
+            reset({
+                [EnumTableColum.ID]: editModal.movie.id ?? null,
+                [EnumTableColum.TITLE]: editModal.movie.title ?? "",
+                [EnumTableColum.GENRE]: editModal.movie.genre ?? "",
+                [EnumTableColum.DURATION]: editModal.movie.duration ?? "",
+                [EnumTableColum.RATING]: editModal.movie.rating ?? "",
+                [EnumTableColum.RELEASE_DATE]: editModal.movie.releaseDate
+                    ? new Date(editModal.movie.releaseDate).toISOString().split("T")[0]
+                    : "",
+                [EnumTableColum.DIRECTOR]: editModal.movie.director ?? "",
+                [EnumTableColum.CAST]: editModal.movie.cast ?? "",
+                [EnumTableColum.SYNOPSIS]: editModal.movie.synopsis ?? "",
+                [EnumTableColum.TRAILER]: editModal.movie.trailer ?? "",
+                [EnumTableColum.IMAGE]:
+                    editModal.movie.image ? (editModal.movie.image as File) : null,
+                [EnumSupabseColumn.CINEMA_ID]: editModal.movie.cinema?.id
+                    ? Number(editModal.movie.cinema.id)
+                    : null,
+                [EnumSupabseColumn.MOVIE_STATUS_ID]: editModal.movie.status?.id
+                    ? Number(editModal.movie.status.id)
+                    : null,
+            });
+        } else if (!editModal?.movie) {
+            reset(); // clear on create
+        }
+    }, [editModal?.movie, cinemas?.contents, statuses?.contents, reset]);
     const closeMovieModal = () => {
         setEditModal({show: false})
         reset()
@@ -67,6 +94,13 @@ const CreateEditMovieModal = ({editModal, setEditModal, setToast}: IEditMovieMod
         }
     }
     const previewImage = watch(EnumTableColum.IMAGE);
+    if (!cinemas?.contents || !statuses?.contents) {
+        return (
+            <div className="fixed inset-0 bg-black/70 flex items-center justify-center text-white">
+                Loading movie data...
+            </div>
+        );
+    }
     return (
         <div
             className="fixed inset-0 bg-black/70 flex items-center justify-center p-4 z-50 backdrop-blur-sm overflow-y-auto">
