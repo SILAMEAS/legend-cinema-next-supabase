@@ -7,6 +7,8 @@ import {useCreateUpdateMovieMutation, useGetMovieStatusQuery} from "@/redux/serv
 import {useGetCinemaQuery} from "@/redux/services/cinema/cinema";
 import {EnumMethod} from "@/utils/enum/EnumMethod";
 import RenderImage from "@/components/RenderImage";
+import Loading from "@/app/loading";
+import {EnumSize} from "@/utils/enum/EnumSize";
 
 const defaultValues: IMovieRequest = {
     [EnumTableColum.ID]: null,
@@ -25,7 +27,7 @@ const defaultValues: IMovieRequest = {
 };
 const CreateEditMovieModal = ({editModal, setEditModal, setToast}: IEditMovieModalProps) => {
     const {data: statuses} = useGetMovieStatusQuery();
-    const [createUpdateMovie] = useCreateUpdateMovieMutation();
+    const [createUpdateMovie,resultCreateOrUpdate] = useCreateUpdateMovieMutation();
     const {data: cinemas} = useGetCinemaQuery();
 
     const {
@@ -38,7 +40,7 @@ const CreateEditMovieModal = ({editModal, setEditModal, setToast}: IEditMovieMod
     } = useForm<IMovieRequest>({
         defaultValues
     })
-
+const methodCalling = resultCreateOrUpdate?.originalArgs?.method;
     // ✅ Sync form values whenever movie changes
     useEffect(() => {
         if (editModal?.movie && cinemas?.contents && statuses?.contents) {
@@ -100,6 +102,15 @@ const CreateEditMovieModal = ({editModal, setEditModal, setToast}: IEditMovieMod
                 Loading movie data...
             </div>
         );
+    }
+    const UIButtonRendering=()=>{
+        if(methodCalling){
+            return <Loading className={'h-[auto]'} size={EnumSize.small}/>
+        }else if(editModal?.movie?.id){
+            return  "Update Movie"
+        }else {
+            return "Create Movie"
+        }
     }
     return (
         <div
@@ -286,9 +297,9 @@ const CreateEditMovieModal = ({editModal, setEditModal, setToast}: IEditMovieMod
                 <div className="flex gap-4 mt-6">
                     <button
                         type="submit"
-                        className="bg-red-600 hover:bg-red-700 text-white px-6 py-2.5 rounded-lg font-medium transition-colors"
+                        className={`bg-${methodCalling?"gray":"red"}-600 hover:bg-red-700 text-white px-6 py-2.5 rounded-lg font-medium transition-colors`}
                     >
-                        {`${editModal?.movie?.id ? "Update Movie" : "Create Movie"}`}
+                        {UIButtonRendering()}
                     </button>
                     <button
                         type="button"
