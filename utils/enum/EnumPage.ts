@@ -20,5 +20,5 @@ export enum EnumPage{
     ADMIN_MOVIES="/admin/movies",
     ADMIN_OFFERS="/admin/offers",
     ADMIN_SETTINGS="/admin/settings",
-    ADMIN_MOVIES_NEW="/admin/movies/new"
+    CORPORATE="/corporate",
 }

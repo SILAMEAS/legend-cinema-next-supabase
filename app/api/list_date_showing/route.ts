@@ -23,13 +23,20 @@ export async function GET(request: Request) {
         // Cast contents to the proper type
         const contents = result.contents as ListDateShowingResponse[];
 
-        // Remove duplicate date_showing values
+        const today = new Date();
+        today.setHours(0, 0, 0, 0); // reset time for fair comparison
+
         const uniqueDates = Array.from(
             new Set(
-                contents.map(item => {
-                    const date = item[EnumTableColum.DATE_SHOWING];
-                    return new Date(date).toISOString().split("T")[0]; // extract "YYYY-MM-DD"
-                })
+                contents
+                    .map(item => {
+                        const date = new Date(item[EnumTableColum.DATE_SHOWING]);
+                        if (date >= today) {
+                            return date.toISOString().split("T")[0]; // keep only YYYY-MM-DD
+                        }
+                        return null;
+                    })
+                    .filter(Boolean) // remove nulls
             )
         ).map(date => ({ date_showing: date }));
 
